@@ -2,20 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using System;
 
 public class BuildingSystem : MonoBehaviour
 {
     public static BuildingSystem Instance;
+    public static event Action OnTowerPlaced;
+
+
     public GridLayout gridLayout;
     private Grid grid;
 
     [SerializeField] private Tilemap mainTilemap;
-    [SerializeField] private Tilemap whiteTile;
 
     public GameObject prefab1;
     public GameObject prefab2;
 
-    private PlaceableObject ObjectToPlace;
+    private PlaceTower ObjectToPlace;
 
     #region unity methods
 
@@ -33,7 +36,13 @@ public class BuildingSystem : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.B))
         {
-           
+            InitializeWithObject(prefab2);
+        }
+
+        if (Input.GetMouseButtonDown(0) && BuildingSystem.IsMouseOnBuildable() && ObjectToPlace != null)
+        {
+            OnTowerPlaced?.Invoke();
+            ObjectToPlace = null;
         }
     }
 
@@ -51,6 +60,20 @@ public class BuildingSystem : MonoBehaviour
         }
         else return Vector3.zero;
     }
+    
+    //fix
+    public static bool IsMouseOnBuildable()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit raycastHit))
+        {
+            if (raycastHit.collider.tag == "Buildable")
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public Vector3 SnapCoordinateTogrid(Vector3 position)
     {
@@ -66,11 +89,22 @@ public class BuildingSystem : MonoBehaviour
     public void InitializeWithObject(GameObject prefab)
     {
         Vector3 position = SnapCoordinateTogrid(GetMouseWorldPosition());
+        PlaceTower placeObjectComponent = prefab.GetComponent<PlaceTower>();
 
-        GameObject obj = Instantiate(prefab, position, Quaternion.identity);
-        ObjectToPlace = obj.GetComponent<PlaceableObject>();
-        obj.AddComponent<ObjectDrag>();
+        if (ObjectToPlace != null)
+        {
+            Destroy(ObjectToPlace.gameObject);
+            ObjectToPlace = null;
+        }
+
+        if (MoneyManager.Instance.GetMoney() >= placeObjectComponent.moneyWorth)
+        {
+
+            GameObject obj = Instantiate(prefab, position, Quaternion.identity);
+
+            ObjectToPlace = placeObjectComponent;
+            }
+        }
+
+        #endregion
     }
-
-    #endregion
-}

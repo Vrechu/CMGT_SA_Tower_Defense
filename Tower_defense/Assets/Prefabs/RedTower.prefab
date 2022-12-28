@@ -11,10 +11,9 @@ GameObject:
   - component: {fileID: 2420205143250266970}
   - component: {fileID: 2101927916602296595}
   - component: {fileID: 3410655386360012811}
-  - component: {fileID: 2470877275374260865}
   m_Layer: 0
   m_Name: Cube
-  m_TagString: Untagged
+  m_TagString: Respawn
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -62,7 +61,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: ff3fd79f77fea7c4fa6f054b36538930, type: 2}
+  - {fileID: 2100000, guid: ad7c234daacaa9e498ad66e5befb8372, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -84,19 +83,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &2470877275374260865
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 327601036746541817}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7795853449283007894
 GameObject:
   m_ObjectHideFlags: 0
@@ -110,10 +96,10 @@ GameObject:
   - component: {fileID: 7795853449283007888}
   - component: {fileID: 7795853449283007889}
   - component: {fileID: 7795853449283007901}
-  - component: {fileID: 4089482982470945875}
+  - component: {fileID: -2203416353802063026}
   m_Layer: 0
-  m_Name: Tower
-  m_TagString: Untagged
+  m_Name: RedTower
+  m_TagString: Respawn
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -162,7 +148,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: ff3fd79f77fea7c4fa6f054b36538930, type: 2}
+  - {fileID: 2100000, guid: ad7c234daacaa9e498ad66e5befb8372, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -196,7 +182,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!114 &7795853449283007901
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -213,7 +199,7 @@ MonoBehaviour:
   attackRange: 3
   attackRate: 0.5
   attackDamage: 20
---- !u!114 &4089482982470945875
+--- !u!114 &-2203416353802063026
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -222,6 +208,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 7795853449283007894}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 005273d110ebcd6438b4e2e5eaea4495, type: 3}
+  m_Script: {fileID: 11500000, guid: e4ed5a834d0183847a920162d395e923, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

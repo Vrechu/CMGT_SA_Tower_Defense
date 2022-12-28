@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 892745234606387786}
   - component: {fileID: 892745234606387796}
   - component: {fileID: 892745234606387799}
+  - component: {fileID: 729843531}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -46,11 +47,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ad298ce40af4c54cb1c4bf9ad03b6f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waveSizes: 020000000400000001000000
-  spawnRate: 1
+  waveSizes: 0a0000000f00000014000000
+  spawnRate: 2
   EnemyTypes:
-  - {fileID: 4989741335474385868, guid: 66a5a6885888d3c42895485cc89bd9f0, type: 3}
-  - {fileID: 4989741335474385868, guid: 9de8e1ed201d62545a84d7632376cba8, type: 3}
+  - {fileID: 8265610789435586453, guid: 66a5a6885888d3c42895485cc89bd9f0, type: 3}
   Wave: []
   enemySpawn: {fileID: 0}
 --- !u!114 &892745234606387796
@@ -79,3 +79,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameState: 1
+--- !u!114 &729843531
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 892745234606387787}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 278aff5deba7caf40824f5080b179e86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

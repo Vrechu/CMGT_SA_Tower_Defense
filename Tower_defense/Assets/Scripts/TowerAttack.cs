@@ -11,6 +11,7 @@ public class TowerAttack : MonoBehaviour
     private float attackTimer = 0;
 
 
+
     void Update()
     {
         Countdown();
@@ -53,7 +54,6 @@ public class TowerAttack : MonoBehaviour
                 }
             }
         }
-
     }
     
     void Shoot()
