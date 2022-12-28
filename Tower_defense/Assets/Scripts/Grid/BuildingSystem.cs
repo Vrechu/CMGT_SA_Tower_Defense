@@ -18,7 +18,7 @@ public class BuildingSystem : MonoBehaviour
     public GameObject prefab1;
     public GameObject prefab2;
 
-    private PlaceTower ObjectToPlace;
+    private GameObject ObjectToPlace;
 
     #region unity methods
 
@@ -102,7 +102,7 @@ public class BuildingSystem : MonoBehaviour
 
             GameObject obj = Instantiate(prefab, position, Quaternion.identity);
 
-            ObjectToPlace = placeObjectComponent;
+            ObjectToPlace = obj;
             }
         }
 

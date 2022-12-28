@@ -1,13 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class FinishManager : MonoBehaviour
 {
-    public static FinishManager Instance;
+    public static FinishManager Instance { get; set; }
+    public event Action OnLivesChange;
+
     public int lives = 5;
 
-    void Start()
+    void Awake()
     {
         if (Instance == null) Instance = this;
         else Destroy(this);
@@ -21,6 +24,12 @@ public class FinishManager : MonoBehaviour
     public void ReduceLives()
     {
         lives--;
-        Debug.Log(lives);
+        OnLivesChange?.Invoke();
     }
+    public void IncreaseLives(int amount)
+    {
+        lives += amount;
+        OnLivesChange?.Invoke();
+    }
+
 }

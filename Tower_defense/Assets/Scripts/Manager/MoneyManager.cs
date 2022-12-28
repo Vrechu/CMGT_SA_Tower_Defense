@@ -1,10 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class MoneyManager : MonoBehaviour
 {
     public static MoneyManager Instance { get; set; }
+
+    public event Action OnMoneyChange;
 
     private float money = 300;
 
@@ -26,11 +29,14 @@ public class MoneyManager : MonoBehaviour
     public void AddMoney(float amount)
     {
         money += amount;
+        OnMoneyChange?.Invoke();
     }
 
     public void RemoveMoney(float amount)
     {
-    
+        money -= amount;
+        if (money < 0) money = 0;
+        OnMoneyChange?.Invoke();
     }
 
     public float GetMoney()

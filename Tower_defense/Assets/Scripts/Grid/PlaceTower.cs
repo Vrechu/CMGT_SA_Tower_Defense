@@ -47,5 +47,6 @@ public class PlaceTower : MonoBehaviour
         collider.enabled = true;
         towerAttack.enabled = true;
         OnTowerPlaced?.Invoke(moneyWorth);
+        BuildingSystem.OnTowerPlaced -= Place;
     }
 }
