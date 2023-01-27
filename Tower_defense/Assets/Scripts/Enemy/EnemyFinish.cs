@@ -20,7 +20,7 @@ public class EnemyFinish : MonoBehaviour
     {
         if (other.tag == "Finish")
         {
-            FinishManager.Instance.ReduceLives();
+            EventBus<EnemyReachedEndEvent>.Publish(new EnemyReachedEndEvent());
             Destroy(gameObject);
         }
     }

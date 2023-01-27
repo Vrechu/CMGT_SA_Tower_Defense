@@ -9,18 +9,16 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI lives;
 
 
-    private void Start()
+    private void OnEnable()
     {
-        MoneyManager.Instance.OnMoneyChange += SetMoneyUI;
-        FinishManager.Instance.OnLivesChange += SetLivesUI;
-        SetLivesUI();
-        SetMoneyUI();
+        EventBus<MoneyChangedEvent>.Subscribe(SetMoneyUI);
+        EventBus<LivesChangedEvent>.Subscribe(SetLivesUI);
     }
 
     private void OnDestroy()
     {
-        MoneyManager.Instance.OnMoneyChange -= SetMoneyUI;
-        FinishManager.Instance.OnLivesChange -= SetLivesUI;
+        EventBus<MoneyChangedEvent>.UnSubscribe(SetMoneyUI);
+        EventBus<LivesChangedEvent>.UnSubscribe(SetLivesUI);
     }
 
     // Update is called once per frame
@@ -29,13 +27,13 @@ public class UIManager : MonoBehaviour
         
     }
 
-    private void SetMoneyUI()
+    private void SetMoneyUI(MoneyChangedEvent moneyChangedEvent)
     {
-        money.SetText("Money: " + MoneyManager.Instance.GetMoney());
+        money.SetText("Money: " + moneyChangedEvent.money);
     }
 
-    private void SetLivesUI()
+    private void SetLivesUI(LivesChangedEvent livesChangedEvent)
     {
-        lives.SetText("Lives: " + FinishManager.Instance.lives);
+        lives.SetText("Lives: " + livesChangedEvent.lives);
     }
 }

@@ -7,36 +7,38 @@ public class MoneyManager : MonoBehaviour
 {
     public static MoneyManager Instance { get; set; }
 
-    public event Action OnMoneyChange;
-
     private float money = 300;
 
+    private void Start()
+    {
+        EventBus<MoneyChangedEvent>.Publish(new MoneyChangedEvent(money));
+    }
 
     private void Awake()
     {
         if (Instance == null) Instance = this;
         else Destroy(this);
-        EnemyHealth.OnEnemyDeath += AddMoney;
-        PlaceTower.OnTowerPlaced += RemoveMoney;
+        EventBus<EnemyKilledEvent>.Subscribe(AddMoney);
+        EventBus<TowerPlacedEvent>.Subscribe(RemoveMoney);
     }
 
     private void OnDestroy()
     {
-        EnemyHealth.OnEnemyDeath -= AddMoney;
-        PlaceTower.OnTowerPlaced -= RemoveMoney;
+        EventBus<EnemyKilledEvent>.UnSubscribe(AddMoney);
+        EventBus<TowerPlacedEvent>.UnSubscribe(RemoveMoney);
     }
 
-    public void AddMoney(float amount)
+    public void AddMoney(EnemyKilledEvent enemyKilledEvent)
     {
-        money += amount;
-        OnMoneyChange?.Invoke();
+        money += enemyKilledEvent.money;
+        EventBus<MoneyChangedEvent>.Publish(new MoneyChangedEvent(money));
     }
 
-    public void RemoveMoney(float amount)
+    public void RemoveMoney(TowerPlacedEvent towerPlacedEvent)
     {
-        money -= amount;
+        money -= towerPlacedEvent.cost;
         if (money < 0) money = 0;
-        OnMoneyChange?.Invoke();
+        EventBus<MoneyChangedEvent>.Publish(new MoneyChangedEvent(money));
     }
 
     public float GetMoney()

@@ -10,7 +10,9 @@ public class TowerAttack : MonoBehaviour
     [SerializeField] private float attackDamage = 50;
     private float attackTimer = 0;
 
-
+    private void Start()
+    {
+    }
 
     void Update()
     {

@@ -42,6 +42,7 @@ public class WaveManager : MonoBehaviour
 
     void StartWave()
     {
+        Wave.Clear();
         canSpawn = true;
         Debug.Log("Current wave: " + currentWave);
     }
@@ -52,7 +53,6 @@ public class WaveManager : MonoBehaviour
         GameStateManager.Instance.SetState(GameStateManager.GameState.Build);
         if (currentWave + 1 < waveSizes.Length) currentWave++;
         else Debug.Log("Game Done");
-        Wave.Clear();
     }
 
     void CountDown()

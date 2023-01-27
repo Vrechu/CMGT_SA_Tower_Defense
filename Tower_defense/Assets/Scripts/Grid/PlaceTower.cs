@@ -46,7 +46,7 @@ public class PlaceTower : MonoBehaviour
         offset = transform.position - BuildingSystem.GetMouseWorldPosition();
         collider.enabled = true;
         towerAttack.enabled = true;
-        OnTowerPlaced?.Invoke(moneyWorth);
+        EventBus<TowerPlacedEvent>.Publish(new TowerPlacedEvent(moneyWorth));
         BuildingSystem.OnTowerPlaced -= Place;
     }
 }
