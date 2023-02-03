@@ -6,7 +6,6 @@ using System;
 public class GameStateManager : MonoBehaviour
 {
     public static GameStateManager Instance { get; set; }
-    public event Action OnFightStart;
     public enum GameState {Fight, Build}
 
     public GameState gameState = GameState.Build;
@@ -16,6 +15,16 @@ public class GameStateManager : MonoBehaviour
     {
         if (Instance == null) Instance = this;
         else Destroy(this);
+    }
+
+    private void OnEnable()
+    {
+        EventBus<AllEnemiesGoneEvent>.Subscribe(StartBuild);
+    }
+
+    private void OnDestroy()
+    {
+        EventBus<AllEnemiesGoneEvent>.UnSubscribe(StartBuild);
     }
 
     void Update()
@@ -33,7 +42,7 @@ public class GameStateManager : MonoBehaviour
                 break;
 
             case GameState.Fight:
-                OnFightStart?.Invoke();
+                EventBus<BuildingFaseEndedEvent>.Publish(new BuildingFaseEndedEvent());
                 break;
 
         }
@@ -46,5 +55,10 @@ public class GameStateManager : MonoBehaviour
         {
             SetState(GameState.Fight);
         }
+    }
+
+    void StartBuild(AllEnemiesGoneEvent allEnemiesGoneEvent)
+    {
+        SetState(GameState.Build);
     }
 }

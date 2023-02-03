@@ -7,13 +7,17 @@ public class WaveManager : MonoBehaviour
     public static WaveManager Instance;
 
     private int currentWave = 0;
-    [SerializeField] private int[] waveSizes;
     private int spawnNumber = 0;
     [SerializeField] private float spawnRate = 1;
     private float spawnTimer = 1;
 
     public List<GameObject> EnemyTypes;
     public List<GameObject> Wave;
+
+    public Vector2[] waveComposition;
+    private int waveSize;
+    private int enemiesKilledInWave;
+
     public Transform enemySpawn;
 
     bool canSpawn = false;
@@ -24,34 +28,45 @@ public class WaveManager : MonoBehaviour
         else Destroy(this);
     }
 
-    private void Start()
+    private void OnEnable()
     {
-        GameStateManager.Instance.OnFightStart += StartWave;
+        EventBus<BuildingFaseEndedEvent>.Subscribe(StartWave);
+        EventBus<EnemyKilledEvent>.Subscribe(OnEnemyKilled);
+        EventBus<EnemyReachedEndEvent>.Subscribe(OnEnemyFinisheded);
     }
 
     private void OnDestroy()
     {
-        GameStateManager.Instance.OnFightStart -= StartWave;
+        EventBus<BuildingFaseEndedEvent>.UnSubscribe(StartWave);
+        EventBus<EnemyKilledEvent>.UnSubscribe(OnEnemyKilled);
+        EventBus<EnemyReachedEndEvent>.UnSubscribe(OnEnemyFinisheded);
     }
-
 
     void Update()
     {
         if (canSpawn) CountDown();
     }
 
-    void StartWave()
+    void StartWave(BuildingFaseEndedEvent buildingFaseEndedEvent)
     {
         Wave.Clear();
         canSpawn = true;
         Debug.Log("Current wave: " + currentWave);
+        CalculateWaveSize();
+        EventBus<WaveStartEvent>.Publish(new WaveStartEvent(waveSize));
+        enemiesKilledInWave = 0;
     }
+
+    void CalculateWaveSize()
+    {
+        waveSize = (int)(waveComposition[currentWave][0] + waveComposition[currentWave][1]);
+    }
+
     void EndWave()
     {
         canSpawn = false;
         spawnNumber = 0;
-        GameStateManager.Instance.SetState(GameStateManager.GameState.Build);
-        if (currentWave + 1 < waveSizes.Length) currentWave++;
+        if (currentWave + 1 < waveSize) currentWave++;
         else Debug.Log("Game Done");
     }
 
@@ -69,7 +84,7 @@ public class WaveManager : MonoBehaviour
 
     void CheckSpawnsleft()
     {
-        if (waveSizes[currentWave] - spawnNumber > 0)
+        if (waveSize - spawnNumber > 0)
         {
             SpawnRandomEnemy();
             spawnTimer = spawnRate;
@@ -79,13 +94,41 @@ public class WaveManager : MonoBehaviour
 
     void SpawnRandomEnemy()
     {
-        int randomEnemy = Random.Range(0, EnemyTypes.Count);
+        int randomEnemy = Random.Range(0, 2);
+        randomEnemy = EnemyLeftOfType(randomEnemy);
 
         if (enemySpawn != null && EnemyTypes[randomEnemy] != null)
         {
             Wave.Add(Instantiate(EnemyTypes[randomEnemy], enemySpawn, false));
             spawnNumber++;
+            waveComposition[currentWave][randomEnemy]--;
         }
         else Debug.LogError("No enemy or spawn in list.");
+    }
+
+    private int EnemyLeftOfType(int enemy)
+    {
+        if (waveComposition[currentWave][enemy] > 0)
+        {
+            return enemy;
+        }
+        else if (enemy == 0) return EnemyLeftOfType(1);
+        else return EnemyLeftOfType(0);
+    }
+
+    private void OnEnemyKilled(EnemyKilledEvent enemyKilledEvent)
+    {        
+        ReduceEnemies();
+    }
+
+    private void OnEnemyFinisheded(EnemyReachedEndEvent enemyReachedEndEvent)
+    {        
+        ReduceEnemies();
+    }
+
+    private void ReduceEnemies()
+    {
+        enemiesKilledInWave++;
+        if (enemiesKilledInWave >= waveSize) EventBus<AllEnemiesGoneEvent>.Publish(new AllEnemiesGoneEvent());
     }
 }

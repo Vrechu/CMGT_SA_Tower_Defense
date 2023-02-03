@@ -45,4 +45,11 @@ public class LivesChangedEvent : Event
     public LivesChangedEvent(float cLives) { lives = cLives; }
     public float lives;
 }
+public class WaveStartEvent: Event
+{
+    public WaveStartEvent(int cEnemies) { enemies = cEnemies; }
+    public int enemies;
+}
+public class BuildingFaseEndedEvent : Event { }
+public class AllEnemiesGoneEvent : Event{ }
 

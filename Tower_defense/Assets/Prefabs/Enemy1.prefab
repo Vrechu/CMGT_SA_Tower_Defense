@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1821949507819936805}
   - component: {fileID: 6063059672146716046}
+  - component: {fileID: 3132373508456724698}
   m_Layer: 5
   m_Name: Slider
   m_TagString: Untagged
@@ -91,6 +92,18 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &3132373508456724698
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 489165525751107719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d321873539182445a145cf0b6bcd1aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &867985645902470951
 GameObject:
   m_ObjectHideFlags: 0
@@ -292,6 +305,7 @@ GameObject:
   - component: {fileID: 3985566762895072707}
   - component: {fileID: 9166475540214063069}
   - component: {fileID: 6619886131201329441}
+  - component: {fileID: 8404808541333721947}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -381,6 +395,20 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &8404808541333721947
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3167419967173037084}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83e58d3e3e08ac14aa8111bab7829bcb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainCamera: {fileID: 0}
+  canvas: {fileID: 0}
 --- !u!1 &4312886732708058862
 GameObject:
   m_ObjectHideFlags: 0
@@ -512,7 +540,7 @@ GameObject:
   - component: {fileID: 8265610789435586459}
   - component: {fileID: 9036124045129066192}
   m_Layer: 0
-  m_Name: Enemy
+  m_Name: Enemy1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
