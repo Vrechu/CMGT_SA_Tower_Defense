@@ -4,23 +4,18 @@ using UnityEngine;
 
 public class EnemyFinish : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    private EnemyID ID;
 
-    // Update is called once per frame
-    void Update()
+    private void OnEnable()
     {
-        
+        ID = GetComponent<EnemyID>();
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Finish")
         {
-            EventBus<EnemyReachedEndEvent>.Publish(new EnemyReachedEndEvent());
+            EventBus<EnemyReachedEndEvent>.Publish(new EnemyReachedEndEvent(ID.ID));
             Destroy(gameObject);
         }
     }

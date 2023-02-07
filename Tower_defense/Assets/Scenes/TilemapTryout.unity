@@ -941,11 +941,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 892745234606387786, guid: b612a6993ffe84447a391eefa99a639a, type: 3}
       propertyPath: waveComposition.Array.data[0].x
-      value: 10
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 892745234606387786, guid: b612a6993ffe84447a391eefa99a639a, type: 3}
       propertyPath: waveComposition.Array.data[0].y
-      value: 5
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 892745234606387786, guid: b612a6993ffe84447a391eefa99a639a, type: 3}
       propertyPath: waveComposition.Array.data[1].x
@@ -15026,8 +15026,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gridLayout: {fileID: 1357712783}
   mainTilemap: {fileID: 262782123}
-  prefab1: {fileID: 7795853449283007894, guid: 4b4704a5c281b9347b471979921a11d9, type: 3}
-  prefab2: {fileID: 7795853449283007894, guid: acb89437de1686142ad13038cd0c50cc, type: 3}
+  prefabs:
+  - {fileID: 7795853449283007894, guid: 4b4704a5c281b9347b471979921a11d9, type: 3}
+  - {fileID: 7795853449283007894, guid: acb89437de1686142ad13038cd0c50cc, type: 3}
+  - {fileID: 7795853449283007894, guid: 919485f36770aa04c81dfdef619a58b2, type: 3}
 --- !u!1001 &1361011011
 PrefabInstance:
   m_ObjectHideFlags: 0

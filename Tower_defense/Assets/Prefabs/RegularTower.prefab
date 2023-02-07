@@ -98,7 +98,7 @@ GameObject:
   - component: {fileID: 7795853449283007901}
   - component: {fileID: 1257788715568253790}
   m_Layer: 0
-  m_Name: BlueTower
+  m_Name: RegularTower
   m_TagString: Respawn
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -211,3 +211,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4ed5a834d0183847a920162d395e923, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moneyWorth: 50

@@ -15,8 +15,7 @@ public class BuildingSystem : MonoBehaviour
 
     [SerializeField] private Tilemap mainTilemap;
 
-    public GameObject prefab1;
-    public GameObject prefab2;
+    public GameObject[] prefabs;
 
     private GameObject ObjectToPlace;
 
@@ -32,11 +31,15 @@ public class BuildingSystem : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.A))
         {
-            InitializeWithObject(prefab1);
+            InitializeWithObject(prefabs[0]);
         }
         else if (Input.GetKeyDown(KeyCode.B))
+        { 
+            InitializeWithObject(prefabs[1]);
+        }
+        else if (Input.GetKeyDown(KeyCode.C))
         {
-            InitializeWithObject(prefab2);
+            InitializeWithObject(prefabs[2]);
         }
 
         if (Input.GetMouseButtonDown(0) && BuildingSystem.IsMouseOnBuildable() && ObjectToPlace != null)

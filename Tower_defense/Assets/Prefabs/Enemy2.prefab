@@ -534,8 +534,10 @@ GameObject:
   - component: {fileID: 8265610789435586461}
   - component: {fileID: 8265610789435586460}
   - component: {fileID: 8265610789435586463}
+  - component: {fileID: 914170959597944711}
   - component: {fileID: 8265610789435586462}
   - component: {fileID: 8265610789435586457}
+  - component: {fileID: 4420681478302425769}
   - component: {fileID: 8265610789435586456}
   - component: {fileID: 8265610789435586459}
   - component: {fileID: 9036124045129066192}
@@ -626,6 +628,22 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
+--- !u!114 &914170959597944711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8265610789435586453}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2bf4c9cf251f5754dbc253fecc858632, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ID: 0
+  moneyWorth: 75
+  health: 150
+  speed: 5
 --- !u!114 &8265610789435586462
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -652,7 +670,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 100
-  moneyWorth: 50
+--- !u!114 &4420681478302425769
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8265610789435586453}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1f61e755b616e64db21714b877b8554, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &8265610789435586456
 MonoBehaviour:
   m_ObjectHideFlags: 0

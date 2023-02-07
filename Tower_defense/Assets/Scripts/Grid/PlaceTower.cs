@@ -10,7 +10,7 @@ public class PlaceTower : MonoBehaviour
     private Vector3 offset;
     private bool placed = false;
     private Collider collider;
-    private TowerAttack towerAttack;
+    private ITowerAttack towerAttack;
     public float moneyWorth = 50;
 
     private void Awake()
@@ -27,8 +27,8 @@ public class PlaceTower : MonoBehaviour
     {
         collider = GetComponent<Collider>();
         collider.enabled = false;
-        towerAttack = GetComponent<TowerAttack>();
-        towerAttack.enabled = false;
+        towerAttack = GetComponent<ITowerAttack>();
+        towerAttack.Enabled(false);
     }
 
     private void Update()
@@ -45,7 +45,7 @@ public class PlaceTower : MonoBehaviour
         placed = true;
         offset = transform.position - BuildingSystem.GetMouseWorldPosition();
         collider.enabled = true;
-        towerAttack.enabled = true;
+        towerAttack.Enabled(true);
         EventBus<TowerPlacedEvent>.Publish(new TowerPlacedEvent(moneyWorth));
         BuildingSystem.OnTowerPlaced -= Place;
     }

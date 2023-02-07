@@ -25,10 +25,29 @@ public class EventBus<T> where T : Event
     }
 }
 
-public class EnemyKilledEvent : Event {
-    public EnemyKilledEvent(float cMoney) { money = cMoney; }
-    public float money;
+#region ENEMIES
+public class EnemySpawnedEvent: Event
+{
+    public EnemyID ID;
+    public EnemySpawnedEvent(EnemyID cID)
+    {
+        ID = cID;
+    }
 }
+public class EnemyKilledEvent : Event {
+    public uint enemy;
+    public float money;
+    public EnemyKilledEvent(uint cEnemy, float cMoney) { enemy = cEnemy;  money = cMoney; }
+}
+public class EnemyReachedEndEvent : Event
+{
+    public uint enemy;
+    public EnemyReachedEndEvent(uint cEnemy) { enemy = cEnemy;}
+    
+}
+public class AllEnemiesGoneEvent : Event{ }
+#endregion
+
 public class TowerPlacedEvent : Event
 {
     public TowerPlacedEvent(float cCost) { cost = cCost; }
@@ -39,7 +58,6 @@ public class MoneyChangedEvent : Event
     public MoneyChangedEvent(float cMoney) { money = cMoney; }
     public float money;
 }
-public class EnemyReachedEndEvent : Event { }
 public class LivesChangedEvent : Event
 {
     public LivesChangedEvent(float cLives) { lives = cLives; }
@@ -51,5 +69,4 @@ public class WaveStartEvent: Event
     public int enemies;
 }
 public class BuildingFaseEndedEvent : Event { }
-public class AllEnemiesGoneEvent : Event{ }
 

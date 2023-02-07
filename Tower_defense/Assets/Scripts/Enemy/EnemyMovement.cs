@@ -7,25 +7,24 @@ public class EnemyMovement : MonoBehaviour
 {
     private NavMeshAgent agent;
     private Transform basePosition;
-    [SerializeField] private float speed = 3;
+    private EnemyID ID;
 
-    public void Move()
+    private void OnEnable()
     {
-        throw new System.NotImplementedException();
+        ID = GetComponent<EnemyID>();
     }
 
-    // Start is called before the first frame update
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
         basePosition = GameObject.FindGameObjectWithTag("Finish").transform;
-        agent.speed = speed;
+        agent.speed = ID.speed;
         agent.SetDestination(basePosition.position);
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
+        if (GetComponent<EnemyDebuff>().Debuffed()) agent.speed = ID.speed/ 2;
+        else agent.speed = ID.speed;
     }
 }
