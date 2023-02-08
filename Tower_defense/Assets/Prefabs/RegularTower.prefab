@@ -95,11 +95,12 @@ GameObject:
   - component: {fileID: 7795853449283007891}
   - component: {fileID: 7795853449283007888}
   - component: {fileID: 7795853449283007889}
+  - component: {fileID: 1664167100515883584}
   - component: {fileID: 7795853449283007901}
   - component: {fileID: 1257788715568253790}
   m_Layer: 0
   m_Name: RegularTower
-  m_TagString: Respawn
+  m_TagString: Tower
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -183,6 +184,24 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &1664167100515883584
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7795853449283007894}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9f79cc3227bdb547b24712212f57a3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ID: 0
+  upgradeCost: 75
+  attackRange: 5
+  attackRate: 1
+  attackDamage: 50
+  debuffTime: 4
 --- !u!114 &7795853449283007901
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -195,10 +214,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82b3b8b28afc5d74da4f22ef1e976877, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
-  attackRange: 3
-  attackRate: 0.5
-  attackDamage: 20
+  target: 0
 --- !u!114 &1257788715568253790
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -211,4 +227,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4ed5a834d0183847a920162d395e923, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moneyWorth: 50

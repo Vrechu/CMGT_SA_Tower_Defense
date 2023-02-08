@@ -11,7 +11,14 @@ public class EnemyDebuff : MonoBehaviour
     private void OnEnable()
     {
         ID = GetComponent<EnemyID>();
+        EventBus<TowerDebuffEvent>.Subscribe(Debuff);
     }
+
+    private void OnDestroy()
+    {
+        EventBus<TowerDebuffEvent>.UnSubscribe(Debuff);
+    }
+
     private void Update()
     {
         Debuffed();
@@ -27,8 +34,8 @@ public class EnemyDebuff : MonoBehaviour
         return false;
     }
 
-    public void Debuff(float time)
+    public void Debuff(TowerDebuffEvent towerDebuffEvent)
     {
-        if (!Debuffed()) debuffTimer = time;
+        if (!Debuffed() && towerDebuffEvent.enemyID == ID.ID) debuffTimer = towerDebuffEvent.time;
     }
 }

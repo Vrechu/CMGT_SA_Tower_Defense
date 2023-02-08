@@ -6,92 +6,60 @@ using System;
 
 public class BuildingSystem : MonoBehaviour
 {
-    public static BuildingSystem Instance;
-    public static event Action OnTowerPlaced;
-
-
-    public GridLayout gridLayout;
-    private Grid grid;
-
-    [SerializeField] private Tilemap mainTilemap;
-
-    public GameObject[] prefabs;
+    [SerializeField] private GameObject[] TowerTypes;
+    [SerializeField] private float[] TowerCosts;
 
     private GameObject ObjectToPlace;
+    private int objectToPlaceType;
+    private Dictionary<uint, Transform> towersPlaced = new Dictionary<uint, Transform>();
+    private uint towerNumber = 0;
 
-    #region unity methods
 
-    private void Awake()
+    private void OnEnable()
     {
-        Instance = this;
-        grid = gridLayout.gameObject.GetComponent<Grid>();
+        EventBus<EnoughMoneyForTowerEvent>.Subscribe(InitializeWithObject);
+    }
+
+    private void OnDestroy()
+    {
+        EventBus<EnoughMoneyForTowerEvent>.UnSubscribe(InitializeWithObject);
+    }
+
+    private void Start()
+    {
+        EventBus<TowerCostsChangedEvent>.Publish(new TowerCostsChangedEvent(TowerCosts));
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.A))
+        if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            InitializeWithObject(prefabs[0]);
+            EventBus<TowerSelectedFromMenuEvent>.Publish(new TowerSelectedFromMenuEvent(50, 0));
         }
-        else if (Input.GetKeyDown(KeyCode.B))
-        { 
-            InitializeWithObject(prefabs[1]);
-        }
-        else if (Input.GetKeyDown(KeyCode.C))
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            InitializeWithObject(prefabs[2]);
+            EventBus<TowerSelectedFromMenuEvent>.Publish(new TowerSelectedFromMenuEvent(100, 1));
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            EventBus<TowerSelectedFromMenuEvent>.Publish(new TowerSelectedFromMenuEvent(75, 2));
         }
 
-        if (Input.GetMouseButtonDown(0) && BuildingSystem.IsMouseOnBuildable() && ObjectToPlace != null)
+        if (Input.GetMouseButtonDown(0) && TilemapUtils.IsMouseOnBuildable() && ObjectToPlace != null)
         {
-            OnTowerPlaced?.Invoke();
+            EventBus<TowerPlacedEvent>.Publish(new TowerPlacedEvent(objectToPlaceType, TowerCosts[objectToPlaceType]));
+            towersPlaced.Add(towerNumber, ObjectToPlace.transform);
+            towerNumber++;
             ObjectToPlace = null;
         }
     }
 
 
-    #endregion
-
-    #region utils
-
-    public static Vector3 GetMouseWorldPosition()
+    public void InitializeWithObject(EnoughMoneyForTowerEvent enoughMoneyForTowerEvent)
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit raycastHit))
-        {
-            return raycastHit.point;
-        }
-        else return Vector3.zero;
-    }
-    
-    //fix
-    public static bool IsMouseOnBuildable()
-    {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit raycastHit))
-        {
-            if (raycastHit.collider.tag == "Buildable")
-            {
-                return true;
-            }
-        }
-        return false;
-    }
+        GameObject prefab = TowerTypes[enoughMoneyForTowerEvent.towerType];
 
-    public Vector3 SnapCoordinateTogrid(Vector3 position)
-    {
-        Vector3Int cellPosition = gridLayout.WorldToCell(position);
-        position = grid.GetCellCenterWorld(cellPosition);
-        return position;
-    }
-
-    #endregion
-
-    #region building placement
-
-    public void InitializeWithObject(GameObject prefab)
-    {
-        Vector3 position = SnapCoordinateTogrid(GetMouseWorldPosition());
+        Vector3 position = TilemapUtils.Instance.SnapCoordinateTogrid(TilemapUtils.GetMouseWorldPosition());
         PlaceTower placeObjectComponent = prefab.GetComponent<PlaceTower>();
 
         if (ObjectToPlace != null)
@@ -100,14 +68,9 @@ public class BuildingSystem : MonoBehaviour
             ObjectToPlace = null;
         }
 
-        if (MoneyManager.Instance.GetMoney() >= placeObjectComponent.moneyWorth)
-        {
+        ObjectToPlace = Instantiate(prefab, position, Quaternion.identity);
+        ObjectToPlace.GetComponent<TowerID>().ID = towerNumber;
 
-            GameObject obj = Instantiate(prefab, position, Quaternion.identity);
-
-            ObjectToPlace = obj;
-            }
-        }
-
-        #endregion
+        objectToPlaceType = enoughMoneyForTowerEvent.towerType;
     }
+}

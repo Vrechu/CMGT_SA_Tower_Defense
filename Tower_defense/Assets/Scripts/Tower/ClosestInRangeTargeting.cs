@@ -6,24 +6,31 @@ public class ClosestInRangeTargeting: ITowerTargeting
 {
     private float attackRange = 5;
     private Transform transform;
+    private Dictionary<uint, Transform> wave = new Dictionary<uint, Transform>();
 
     public ClosestInRangeTargeting(Transform cTransform, float cAttackRange)
     {
         transform = cTransform;
         attackRange = cAttackRange;
 
+        EventBus<WaveChangedEvent>.Subscribe(UpdateWave);
     }
 
-    public Transform Target()
+    ~ClosestInRangeTargeting()
     {
-        Transform newTarget = null;
+        EventBus<WaveChangedEvent>.UnSubscribe(UpdateWave);
+    }
+
+    public uint Target()
+    {
+        uint newTarget = 0;
         foreach (KeyValuePair<uint, Transform> target in EnemiesInRange())
         {
-            if (newTarget == null) newTarget = target.Value;
-            else if ((transform.position - newTarget.position).magnitude
+            if (!EnemiesInRange().ContainsKey(newTarget)) newTarget = target.Key;
+            else if ((transform.position - EnemiesInRange()[newTarget].position).magnitude
                 < (transform.position - target.Value.position).magnitude)
             {
-                newTarget = target.Value;
+                newTarget = target.Key;
             }
         }
         return newTarget;
@@ -53,7 +60,7 @@ public class ClosestInRangeTargeting: ITowerTargeting
     public Dictionary<uint, Transform> EnemiesInRange()
     {
         Dictionary<uint, Transform> enemiesInRange = new Dictionary<uint, Transform>();
-        foreach (KeyValuePair<uint,Transform> enemy in  WaveManager.Instance.Wave)
+        foreach (KeyValuePair<uint,Transform> enemy in wave)
         {
             if (IsInRange(enemy.Value))
             {
@@ -61,6 +68,11 @@ public class ClosestInRangeTargeting: ITowerTargeting
             }
         }
         return enemiesInRange;
+    }
+
+    private void UpdateWave(WaveChangedEvent waveChangedEvent)
+    {
+        wave = waveChangedEvent.wave;
     }
 
     

@@ -4,12 +4,24 @@ using UnityEngine;
 
 public class TowerRegularAttack : MonoBehaviour, ITowerAttack
 {
-    public Transform target;
-    [SerializeField] private float attackRange = 5;
-    [SerializeField] private float attackRate = 1;
-    [SerializeField] private float attackDamage = 50;
+    public uint target;
+    private float attackRange = 5;
+    private float attackCooldown = 1;
+    private float attackDamage = 50;
     private float attackTimer = 0;
     ITowerTargeting targetSystem;
+    private TowerID ID;
+
+    private void OnEnable()
+    {
+        ID = GetComponent<TowerID>();
+        EventBus<TowerStatsChangedEvent>.Subscribe(OnTowerStatsChange);
+    }
+
+    private void OnDestroy()
+    {
+        EventBus<TowerStatsChangedEvent>.UnSubscribe(OnTowerStatsChange);
+    }
 
     private void Start()
     {
@@ -24,8 +36,7 @@ public class TowerRegularAttack : MonoBehaviour, ITowerAttack
     void Update()
     {
         Countdown();
-        if (targetSystem.Target() != null) target = targetSystem.Target();
-        else target = null;
+        target = targetSystem.Target();
     }
 
     private void Countdown()
@@ -42,16 +53,24 @@ public class TowerRegularAttack : MonoBehaviour, ITowerAttack
 
     void Shoot()
     {
-        target.GetComponent<EnemyHealth>().TakeDamage(attackDamage);
-        attackTimer = attackRate;
+        EventBus<TowerAttackEvent>.Publish(new TowerAttackEvent(target, attackDamage));
+        attackTimer = attackCooldown;
+    }
+
+    private void OnTowerStatsChange(TowerStatsChangedEvent towerStatsChangedEvent)
+    {
+        attackRange = ID.attackRange;
+        attackDamage = ID.attackDamage;
+        attackCooldown = ID.attackCooldown;
     }
 
     private void OnDrawGizmos()
     {
-        if (target != null)
+        if (this.enabled && targetSystem.EnemiesInRange().ContainsKey(target))
         {
-            Gizmos.color = Color.red;
-            Gizmos.DrawLine(transform.position, target.position);
+            
+                Gizmos.color = Color.cyan;
+                Gizmos.DrawLine(transform.position, targetSystem.EnemiesInRange()[target].position);
         }
     }
 }

@@ -5,28 +5,32 @@ using System;
 
 public class MoneyManager : MonoBehaviour
 {
-    public static MoneyManager Instance { get; set; }
-
     private float money = 300;
+    
 
-    private void Start()
+    private void OnEnable()
     {
-        EventBus<MoneyChangedEvent>.Publish(new MoneyChangedEvent(money));
-    }
-
-    private void Awake()
-    {
-        if (Instance == null) Instance = this;
-        else Destroy(this);
         EventBus<EnemyKilledEvent>.Subscribe(AddMoney);
-        EventBus<TowerPlacedEvent>.Subscribe(RemoveMoney);
-    }
 
+        EventBus<TowerPlacedEvent>.Subscribe(OnTowerPlaced);
+        EventBus<TowerSelectedFromMenuEvent>.Subscribe(CheckIfEnoughMoney);
+        EventBus<UpgradeButtonPressedEvent>.Subscribe(OnTowerUpgradePressed);
+    }
     private void OnDestroy()
     {
         EventBus<EnemyKilledEvent>.UnSubscribe(AddMoney);
-        EventBus<TowerPlacedEvent>.UnSubscribe(RemoveMoney);
+
+        EventBus<TowerPlacedEvent>.UnSubscribe(OnTowerPlaced);
+        EventBus<TowerSelectedFromMenuEvent>.UnSubscribe(CheckIfEnoughMoney);
+        EventBus<UpgradeButtonPressedEvent>.UnSubscribe(OnTowerUpgradePressed);
     }
+
+    private void Start()
+    {
+        EventBus<MoneyChangedEvent>.Publish(new MoneyChangedEvent(money));        
+    }
+
+
 
     public void AddMoney(EnemyKilledEvent enemyKilledEvent)
     {
@@ -34,15 +38,37 @@ public class MoneyManager : MonoBehaviour
         EventBus<MoneyChangedEvent>.Publish(new MoneyChangedEvent(money));
     }
 
-    public void RemoveMoney(TowerPlacedEvent towerPlacedEvent)
+    private void RemoveMoney(float pMoney)
     {
-        money -= towerPlacedEvent.cost;
+        money -= pMoney;
         if (money < 0) money = 0;
         EventBus<MoneyChangedEvent>.Publish(new MoneyChangedEvent(money));
+    }
+
+    private void OnTowerPlaced(TowerPlacedEvent towerPlacedEvent)
+    {
+        RemoveMoney(towerPlacedEvent.cost);
     }
 
     public float GetMoney()
     {
         return money;
+    }
+
+    private void CheckIfEnoughMoney(TowerSelectedFromMenuEvent towerSelectedFromMenuEvent)
+    {
+        if (towerSelectedFromMenuEvent.money < money)
+        {
+            EventBus<EnoughMoneyForTowerEvent>.Publish(new EnoughMoneyForTowerEvent(towerSelectedFromMenuEvent.towerType));
+        }
+    }
+
+    private void OnTowerUpgradePressed(UpgradeButtonPressedEvent upgradeButtonPressedEvent)
+    {
+        if (upgradeButtonPressedEvent.towerID.upgradeCost <= money)
+        {
+            RemoveMoney(upgradeButtonPressedEvent.towerID.upgradeCost);
+            EventBus<EnoughMoneyForUpgradeEvent>.Publish(new EnoughMoneyForUpgradeEvent(upgradeButtonPressedEvent.towerID));
+        }
     }
 }

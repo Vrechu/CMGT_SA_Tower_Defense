@@ -4,11 +4,23 @@ using UnityEngine;
 
 public class TowerAOE : MonoBehaviour, ITowerAttack
 {
-    [SerializeField] private float attackRange = 5;
-    [SerializeField] private float attackRate = 1;
-    [SerializeField] private float attackDamage = 50;
+    private float attackRange = 5;
+    private float attackRate = 1;
+    private float attackDamage = 50;
     private float attackTimer = 0;
     ITowerTargeting targetSystem;
+    private TowerID ID;
+
+    private void OnEnable()
+    {
+        ID = GetComponent<TowerID>();
+        EventBus<TowerStatsChangedEvent>.Subscribe(OnTowerStatsChange);
+    }
+
+    private void OnDestroy()
+    {
+        EventBus<TowerStatsChangedEvent>.UnSubscribe(OnTowerStatsChange);
+    }
 
     private void Start()
     {
@@ -43,10 +55,16 @@ public class TowerAOE : MonoBehaviour, ITowerAttack
         {
             foreach (KeyValuePair<uint, Transform> enemy in targetSystem.EnemiesInRange())
             {
-                enemy.Value.GetComponent<EnemyHealth>().TakeDamage(attackDamage);
+                EventBus<TowerAttackEvent>.Publish(new TowerAttackEvent(enemy.Value.GetComponent<EnemyID>().ID, attackDamage));
                 attackTimer = attackRate;
             }
         }
+    }
+    private void OnTowerStatsChange(TowerStatsChangedEvent towerStatsChangedEvent)
+    {
+        attackRange = ID.attackRange;
+        attackDamage = ID.attackDamage;
+        attackRate = ID.attackCooldown;
     }
 
     private void OnDrawGizmos()
@@ -55,9 +73,10 @@ public class TowerAOE : MonoBehaviour, ITowerAttack
         {
             foreach (KeyValuePair<uint, Transform> enemy in targetSystem.EnemiesInRange())
             {
-                Gizmos.color = Color.red;
+                Gizmos.color = Color.magenta;
                 Gizmos.DrawLine(transform.position, enemy.Value.position);
             }
         }
     }
+
 }

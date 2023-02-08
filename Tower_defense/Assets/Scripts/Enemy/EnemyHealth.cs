@@ -11,13 +11,22 @@ public class EnemyHealth : MonoBehaviour
     {
         ID = GetComponent<EnemyID>();
         health = ID.health;
+        EventBus<TowerAttackEvent>.Subscribe(TakeDamage);
     }
 
-    public void TakeDamage( float damage)
+    private void OnDestroy()
     {
-        if (GetComponent<EnemyDebuff>().Debuffed()) health -= damage;
-        health -= damage;
-        CheckHealth();
+        EventBus<TowerAttackEvent>.UnSubscribe(TakeDamage);
+    }
+
+    public void TakeDamage(TowerAttackEvent towerAttackEvent)
+    {
+        if (towerAttackEvent.enemyID == ID.ID)
+        {
+            if (GetComponent<EnemyDebuff>().Debuffed()) health -= towerAttackEvent.damage;
+            health -= towerAttackEvent.damage;
+            CheckHealth();
+        }
     }
 
     void CheckHealth()

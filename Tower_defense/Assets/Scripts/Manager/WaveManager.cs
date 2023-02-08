@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class WaveManager : MonoBehaviour
 {
-    public static WaveManager Instance;
 
     private int currentWave = 0;
     private uint spawnNumber = 0;
@@ -12,7 +11,7 @@ public class WaveManager : MonoBehaviour
     private float spawnTimer = 1;
 
     public List<GameObject> EnemyTypes;
-    public Dictionary<uint, Transform> Wave = new Dictionary<uint, Transform>();
+    private Dictionary<uint, Transform> wave = new Dictionary<uint, Transform>();
 
     public Vector2[] waveComposition;
 
@@ -21,17 +20,12 @@ public class WaveManager : MonoBehaviour
     private bool canSpawn = false;
 
 
-    private void Awake()
-    {
-        if (Instance == null) Instance = this;
-        else Destroy(this);
-    }
-
     private void OnEnable()
     {
         EventBus<BuildingFaseEndedEvent>.Subscribe(StartWave);
         EventBus<EnemyKilledEvent>.Subscribe(OnEnemyKilled);
         EventBus<EnemyReachedEndEvent>.Subscribe(OnEnemyFinisheded);
+        EventBus<TowerPlacedEvent>.Subscribe(UpdateWave);
     }
 
     private void OnDestroy()
@@ -39,6 +33,7 @@ public class WaveManager : MonoBehaviour
         EventBus<BuildingFaseEndedEvent>.UnSubscribe(StartWave);
         EventBus<EnemyKilledEvent>.UnSubscribe(OnEnemyKilled);
         EventBus<EnemyReachedEndEvent>.UnSubscribe(OnEnemyFinisheded);
+        EventBus<TowerPlacedEvent>.UnSubscribe(UpdateWave);
     }
 
     private void Update()
@@ -49,9 +44,9 @@ public class WaveManager : MonoBehaviour
    private void StartWave(BuildingFaseEndedEvent buildingFaseEndedEvent)
     {
         canSpawn = true;
-        Wave.Clear();
+        wave.Clear();
         Debug.Log("Current wave: " + currentWave);
-        EventBus<WaveStartEvent>.Publish(new WaveStartEvent(WaveSize()));
+        EventBus<WaveStartEvent>.Publish(new WaveStartEvent(currentWave, WaveSize()));
     }
 
    private int WaveSize()
@@ -86,10 +81,11 @@ public class WaveManager : MonoBehaviour
         {
             int randomEnemy = Random.Range(0, 2);
             randomEnemy = EnemyLeftOfType(randomEnemy);
-            Wave.Add(spawnNumber, Instantiate(EnemyTypes[randomEnemy], enemySpawn, false).transform);
-            Wave[spawnNumber].GetComponent<EnemyID>().SetID(spawnNumber);            
+            wave.Add(spawnNumber, Instantiate(EnemyTypes[randomEnemy], enemySpawn, false).transform);
+            wave[spawnNumber].GetComponent<EnemyID>().SetID(spawnNumber);          
             spawnNumber++;
             waveComposition[currentWave][randomEnemy]--;
+            EventBus<WaveChangedEvent>.Publish(new WaveChangedEvent(wave));
         }
         else canSpawn = false;
     }
@@ -105,28 +101,35 @@ public class WaveManager : MonoBehaviour
     }
 
     private void OnEnemyKilled(EnemyKilledEvent enemyKilledEvent)
-    {        
+    {     
         RemoveEnemy(enemyKilledEvent.enemy);
         CheckWaveEnded();
+        EventBus<WaveChangedEvent>.Publish(new WaveChangedEvent(wave));
     }
 
     private void OnEnemyFinisheded(EnemyReachedEndEvent enemyReachedEndEvent)
     {
         RemoveEnemy(enemyReachedEndEvent.enemy);
         CheckWaveEnded();
+        EventBus<WaveChangedEvent>.Publish(new WaveChangedEvent(wave));
     }
 
     private void RemoveEnemy(uint enemy)
     {
-        Wave.Remove(enemy);
+        wave.Remove(enemy);
     }
 
     private void CheckWaveEnded()
     {
-        if (WaveSize() == 0 && Wave.Count == 0)
+        if (WaveSize() == 0 && wave.Count == 0)
         {
             EventBus<AllEnemiesGoneEvent>.Publish(new AllEnemiesGoneEvent());
             EndWave();
         }
+    }
+
+    private void UpdateWave(TowerPlacedEvent towerPlacedEvent)
+    {
+        EventBus<WaveChangedEvent>.Publish(new WaveChangedEvent(wave));
     }
 }

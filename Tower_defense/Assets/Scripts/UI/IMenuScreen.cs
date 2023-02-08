@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface ITowerAttack
+public interface IMenuScreen
 {
-    void Enabled(bool enable);
-
+    void OpenScreen();
+    void CloseScreen();
 }

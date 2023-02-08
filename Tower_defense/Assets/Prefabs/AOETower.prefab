@@ -94,12 +94,13 @@ GameObject:
   - component: {fileID: 7795853449283007890}
   - component: {fileID: 7795853449283007891}
   - component: {fileID: 7795853449283007888}
+  - component: {fileID: -1847312071142183303}
   - component: {fileID: 7795853449283007889}
   - component: {fileID: -2203416353802063026}
   - component: {fileID: -7986295241663722765}
   m_Layer: 0
   m_Name: AOETower
-  m_TagString: Respawn
+  m_TagString: Tower
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -170,6 +171,24 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &-1847312071142183303
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7795853449283007894}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9f79cc3227bdb547b24712212f57a3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ID: 0
+  upgradeCost: 100
+  attackRange: 5
+  attackRate: 1
+  attackDamage: 50
+  debuffTime: 4
 --- !u!65 &7795853449283007889
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -195,7 +214,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4ed5a834d0183847a920162d395e923, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moneyWorth: 50
 --- !u!114 &-7986295241663722765
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -208,6 +226,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98f3ffb02c96687469cec43910e18f4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackRange: 3
-  attackRate: 1
-  attackDamage: 20

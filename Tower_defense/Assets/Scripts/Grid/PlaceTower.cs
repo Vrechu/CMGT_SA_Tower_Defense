@@ -11,16 +11,15 @@ public class PlaceTower : MonoBehaviour
     private bool placed = false;
     private Collider collider;
     private ITowerAttack towerAttack;
-    public float moneyWorth = 50;
 
-    private void Awake()
+    private void OnEnable()
     {
-        BuildingSystem.OnTowerPlaced += Place;
+        EventBus<TowerPlacedEvent>.Subscribe(Place);
     }
 
     private void OnDestroy()
     {
-        BuildingSystem.OnTowerPlaced -= Place;
+        EventBus<TowerPlacedEvent>.UnSubscribe(Place);
     }
 
     private void Start()
@@ -35,18 +34,17 @@ public class PlaceTower : MonoBehaviour
     {
         if (!placed)
         {
-            Vector3 position = BuildingSystem.GetMouseWorldPosition() + offset;
-            transform.position = BuildingSystem.Instance.SnapCoordinateTogrid(position);            
+            Vector3 position = TilemapUtils.GetMouseWorldPosition() + offset;
+            transform.position = TilemapUtils.Instance.SnapCoordinateTogrid(position);            
         }
     }
 
-    private void Place()
+    private void Place(TowerPlacedEvent towerSelectionConfirmedEvent)
     {
         placed = true;
-        offset = transform.position - BuildingSystem.GetMouseWorldPosition();
+        offset = transform.position - TilemapUtils.GetMouseWorldPosition();
         collider.enabled = true;
         towerAttack.Enabled(true);
-        EventBus<TowerPlacedEvent>.Publish(new TowerPlacedEvent(moneyWorth));
-        BuildingSystem.OnTowerPlaced -= Place;
+        EventBus<TowerPlacedEvent>.UnSubscribe(Place);
     }
 }

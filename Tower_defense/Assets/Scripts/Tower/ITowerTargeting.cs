@@ -4,7 +4,7 @@ using UnityEngine;
 
 public interface ITowerTargeting
 {
-    Transform Target();
+    uint Target();
     void SetAttackRange(float attackRange);
     void SetTransform(Transform cTransform);
     Dictionary<uint, Transform> EnemiesInRange();
