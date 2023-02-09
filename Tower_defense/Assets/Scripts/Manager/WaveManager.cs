@@ -4,21 +4,20 @@ using UnityEngine;
 
 public class WaveManager : MonoBehaviour
 {
+    [SerializeField]private List<GameObject> enemyTypes;
+    [SerializeField]private Transform enemySpawn;
 
     private int currentWave = 0;
-    private uint spawnNumber = 0;
-    [SerializeField] private float spawnRate = 1;
+    [SerializeField]private Vector2[] waveComposition;
+    [SerializeField] private float[] spawnRatePerWave;
     private float spawnTimer = 1;
+    private uint spawnNumber = 0;
 
-    public List<GameObject> EnemyTypes;
     private Dictionary<uint, Transform> wave = new Dictionary<uint, Transform>();
 
-    public Vector2[] waveComposition;
-
-    public Transform enemySpawn;
-
     private bool canSpawn = false;
-
+    private bool inWave = false;
+    private CountDownTimer spawnCountdownTimer = new CountDownTimer(1, true);
 
     private void OnEnable()
     {
@@ -35,18 +34,30 @@ public class WaveManager : MonoBehaviour
         EventBus<EnemyReachedEndEvent>.UnSubscribe(OnEnemyFinisheded);
         EventBus<TowerPlacedEvent>.UnSubscribe(UpdateWave);
     }
+    private void Start()
+    {
+        spawnCountdownTimer.Pause();
+    }
 
     private void Update()
     {
-        if (canSpawn) CountDown();
+        if (canSpawn && spawnCountdownTimer.CountDown())
+        {
+            SpawnRandomEnemy();
+        }
     }
 
    private void StartWave(BuildingFaseEndedEvent buildingFaseEndedEvent)
     {
-        canSpawn = true;
-        wave.Clear();
-        Debug.Log("Current wave: " + currentWave);
-        EventBus<WaveStartEvent>.Publish(new WaveStartEvent(currentWave, WaveSize()));
+        if (!inWave)
+        {
+            spawnCountdownTimer.SetCountdownTime(spawnRatePerWave[currentWave]);
+            spawnCountdownTimer.Unpause();
+            inWave = true;
+            canSpawn = true;
+            wave.Clear();
+            EventBus<WaveStartEvent>.Publish(new WaveStartEvent(currentWave, WaveSize()));
+        }
     }
 
    private int WaveSize()
@@ -56,24 +67,12 @@ public class WaveManager : MonoBehaviour
 
    private void EndWave()
     {
+        inWave = false;
+        canSpawn = false;
         spawnNumber = 0;
         if (currentWave + 1 < waveComposition.Length) currentWave++;
-        else Debug.Log("Game Done");
+        else EventBus<WinGameEvent>.Publish(new WinGameEvent());
     }
-
-    private void CountDown()
-    {
-        if (spawnTimer > 0)
-        {
-            spawnTimer -= Time.deltaTime;
-        }
-        else
-        {
-            SpawnRandomEnemy();
-            spawnTimer = spawnRate;
-        }
-    }
-
 
     private void SpawnRandomEnemy()
     {
@@ -81,13 +80,17 @@ public class WaveManager : MonoBehaviour
         {
             int randomEnemy = Random.Range(0, 2);
             randomEnemy = EnemyLeftOfType(randomEnemy);
-            wave.Add(spawnNumber, Instantiate(EnemyTypes[randomEnemy], enemySpawn, false).transform);
-            wave[spawnNumber].GetComponent<EnemyID>().SetID(spawnNumber);          
+            wave.Add(spawnNumber, Instantiate(enemyTypes[randomEnemy], enemySpawn, false).transform);
+            wave[spawnNumber].GetComponent<EnemyID>().SetID(spawnNumber);
             spawnNumber++;
             waveComposition[currentWave][randomEnemy]--;
             EventBus<WaveChangedEvent>.Publish(new WaveChangedEvent(wave));
         }
-        else canSpawn = false;
+        else
+        {
+            spawnCountdownTimer.Pause();
+            canSpawn = false;
+        }
     }
 
     private int EnemyLeftOfType(int enemy)

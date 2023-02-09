@@ -32,19 +32,6 @@ public class BuildingSystem : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            EventBus<TowerSelectedFromMenuEvent>.Publish(new TowerSelectedFromMenuEvent(50, 0));
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            EventBus<TowerSelectedFromMenuEvent>.Publish(new TowerSelectedFromMenuEvent(100, 1));
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            EventBus<TowerSelectedFromMenuEvent>.Publish(new TowerSelectedFromMenuEvent(75, 2));
-        }
-
         if (Input.GetMouseButtonDown(0) && TilemapUtils.IsMouseOnBuildable() && ObjectToPlace != null)
         {
             EventBus<TowerPlacedEvent>.Publish(new TowerPlacedEvent(objectToPlaceType, TowerCosts[objectToPlaceType]));

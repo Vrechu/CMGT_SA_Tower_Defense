@@ -117,6 +117,14 @@ public class TowerStatsChangedEvent : Event
         towerID = cTowerID;
     }
 }
+public class TowerAttackEnabledEvent : Event
+{
+    public uint towerID;
+    public TowerAttackEnabledEvent(uint cTowerId)
+    {
+        towerID = cTowerId;
+    }
+}
 public class TowerSelectedEvent : Event
 {
     public TowerID towerID;
@@ -175,7 +183,11 @@ public class WaveStartEvent: Event
     public int enemies;
     public WaveStartEvent(int cWavenumber, int cEnemies) { waveNumber = cWavenumber; enemies = cEnemies; }
 }
+public class StartPressedEvent : Event { }
 public class BuildingFaseEndedEvent : Event { }
 public class DeselectEvent : Event { }
+
+public class WinGameEvent : Event { }
+public class LoseGameEvent : Event { }
 
 

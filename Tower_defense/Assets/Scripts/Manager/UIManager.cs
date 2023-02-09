@@ -6,17 +6,22 @@ using TMPro;
 public class UIManager : MonoBehaviour
 {
     private float money;
-    public TextMeshProUGUI moneyUI;
-    public TextMeshProUGUI lives;
-    public TextMeshProUGUI wave;
+    [SerializeField] private TextMeshProUGUI moneyUI;
+    [SerializeField] private TextMeshProUGUI moneyGainedUI;
+    [SerializeField] private TextMeshProUGUI lives;
+    [SerializeField] private TextMeshProUGUI wave;
 
     private float[] towerCosts;
-    public TextMeshProUGUI[] towerCostsUI;
+    [SerializeField] private TextMeshProUGUI[] towerCostsUI;
 
-    public GameObject Upgrade;
-    public TextMeshProUGUI upgradeCostUI;
+    [SerializeField] private GameObject Upgrade;
+    [SerializeField] private TextMeshProUGUI upgradeCostUI;
     private float upgradeCost;
 
+    [SerializeField] private GameObject winScreen;
+    [SerializeField] private GameObject loseScreen;
+
+    private CountDownTimer moneyGainedUITimer = new CountDownTimer(0.5f, false);
 
     private void OnEnable()
     {
@@ -27,6 +32,8 @@ public class UIManager : MonoBehaviour
         EventBus<TowerSelectedEvent>.Subscribe(OnTowerSelected);
         EventBus<DeselectEvent>.Subscribe(HideUpgradeButton);
         EventBus<TowerStatsChangedEvent>.Subscribe(OnUpgrade);
+        EventBus<WinGameEvent>.Subscribe(OnGameWin);
+        EventBus<LoseGameEvent>.Subscribe(OnGameLose);
     }
 
     private void OnDestroy()
@@ -38,15 +45,25 @@ public class UIManager : MonoBehaviour
         EventBus<TowerSelectedEvent>.UnSubscribe(OnTowerSelected);
         EventBus<DeselectEvent>.UnSubscribe(HideUpgradeButton);
         EventBus<TowerStatsChangedEvent>.UnSubscribe(OnUpgrade);
+        EventBus<WinGameEvent>.UnSubscribe(OnGameWin);
+        EventBus<LoseGameEvent>.UnSubscribe(OnGameLose);
     }
 
     private void Start()
     {
         Upgrade.SetActive(false);
+        winScreen.SetActive(false);
+        loseScreen.SetActive(false);
+    }
+
+    private void Update()
+    {
+        if (moneyGainedUITimer.CountDown()) moneyGainedUI.enabled = false;
     }
 
     private void OnMoneyChanged(MoneyChangedEvent moneyChangedEvent)
     {
+        SetMoneyGainedUI(moneyChangedEvent.money);
         SetMoneyUI(moneyChangedEvent.money);
         SetUpgradeCostUI(upgradeCost);
         if (towerCosts != null) SetTowerCostsUI(towerCosts);
@@ -60,7 +77,7 @@ public class UIManager : MonoBehaviour
 
     private void SetWaveUI(WaveStartEvent waveStartEvent)
     {
-        wave.SetText("Wave: " + waveStartEvent.waveNumber);
+        wave.SetText("Wave: " + (waveStartEvent.waveNumber + 1));
     }
 
     private void OnTowerCostsChanged(TowerCostsChangedEvent towerCostsChangedEvent)
@@ -108,6 +125,30 @@ public class UIManager : MonoBehaviour
     private void OnUpgrade(TowerStatsChangedEvent towerStatsChangedEvent)
     {
         SetUpgradeCostUI(towerStatsChangedEvent.towerID.upgradeCost);
+    }
+
+    private void OnGameWin(WinGameEvent winGameEvent)
+    {
+        winScreen.SetActive(true);
+    }
+    private void OnGameLose(LoseGameEvent loseGameEvent)
+    {
+        loseScreen.SetActive(true);
+    }
+
+    private void SetMoneyGainedUI(float newMoney)
+    {
+        float moneyGained = newMoney - money;
+        string text = "+";
+        moneyGainedUI.SetText(text + moneyGained.ToString());
+        moneyGainedUI.color = Color.green;
+        if (moneyGained < 0)
+        {
+            moneyGainedUI.color = Color.red;
+            moneyGainedUI.SetText(moneyGained.ToString());
+        }
+        moneyGainedUI.enabled = true;
+        moneyGainedUITimer.Reset();
     }
 }
 

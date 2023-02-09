@@ -7,6 +7,7 @@ public class ClosestInRangeTargeting: ITowerTargeting
     private float attackRange = 5;
     private Transform transform;
     private Dictionary<uint, Transform> wave = new Dictionary<uint, Transform>();
+    private uint currentTarget;
 
     public ClosestInRangeTargeting(Transform cTransform, float cAttackRange)
     {
@@ -23,17 +24,17 @@ public class ClosestInRangeTargeting: ITowerTargeting
 
     public uint Target()
     {
-        uint newTarget = 0;
+        if (EnemiesInRange().ContainsKey(currentTarget)) return currentTarget;
         foreach (KeyValuePair<uint, Transform> target in EnemiesInRange())
         {
-            if (!EnemiesInRange().ContainsKey(newTarget)) newTarget = target.Key;
-            else if ((transform.position - EnemiesInRange()[newTarget].position).magnitude
+            if (!EnemiesInRange().ContainsKey(currentTarget)
+                || (transform.position - EnemiesInRange()[currentTarget].position).magnitude
                 < (transform.position - target.Value.position).magnitude)
             {
-                newTarget = target.Key;
+                currentTarget = target.Key;
             }
         }
-        return newTarget;
+        return currentTarget;
     }
 
 

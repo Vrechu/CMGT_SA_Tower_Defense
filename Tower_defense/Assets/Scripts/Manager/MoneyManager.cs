@@ -57,7 +57,7 @@ public class MoneyManager : MonoBehaviour
 
     private void CheckIfEnoughMoney(TowerSelectedFromMenuEvent towerSelectedFromMenuEvent)
     {
-        if (towerSelectedFromMenuEvent.money < money)
+        if (towerSelectedFromMenuEvent.money <= money)
         {
             EventBus<EnoughMoneyForTowerEvent>.Publish(new EnoughMoneyForTowerEvent(towerSelectedFromMenuEvent.towerType));
         }

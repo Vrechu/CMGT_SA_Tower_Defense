@@ -7,14 +7,15 @@ public class TowerAOE : MonoBehaviour, ITowerAttack
     private float attackRange = 5;
     private float attackRate = 1;
     private float attackDamage = 50;
-    private float attackTimer = 0;
     ITowerTargeting targetSystem;
     private TowerID ID;
+    private CountDownTimer attackCountdownTimer = new CountDownTimer(0, true);
 
     private void OnEnable()
     {
         ID = GetComponent<TowerID>();
         EventBus<TowerStatsChangedEvent>.Subscribe(OnTowerStatsChange);
+        ChangeStats(ID);
     }
 
     private void OnDestroy()
@@ -34,19 +35,7 @@ public class TowerAOE : MonoBehaviour, ITowerAttack
 
     void Update()
     {
-        Countdown();
-    }
-
-    private void Countdown()
-    {
-        if (attackTimer > 0)
-        {
-            attackTimer -= Time.deltaTime;
-        }
-        else
-        {
-            if (targetSystem.EnemiesInRange().Count > 0) Shoot();
-        }
+        if (attackCountdownTimer.CountDown() && targetSystem.EnemiesInRange().Count > 0) Shoot();
     }
 
     void Shoot()
@@ -56,18 +45,23 @@ public class TowerAOE : MonoBehaviour, ITowerAttack
             foreach (KeyValuePair<uint, Transform> enemy in targetSystem.EnemiesInRange())
             {
                 EventBus<TowerAttackEvent>.Publish(new TowerAttackEvent(enemy.Value.GetComponent<EnemyID>().ID, attackDamage));
-                attackTimer = attackRate;
             }
         }
     }
     private void OnTowerStatsChange(TowerStatsChangedEvent towerStatsChangedEvent)
     {
+        ChangeStats(towerStatsChangedEvent.towerID);
+    }
+
+    private void ChangeStats(TowerID iD)
+    {
         attackRange = ID.attackRange;
         attackDamage = ID.attackDamage;
         attackRate = ID.attackCooldown;
+        attackCountdownTimer.SetCountdownTime(attackRate);
     }
 
-    private void OnDrawGizmos()
+        private void OnDrawGizmos()
     {
         if (this.enabled && targetSystem.EnemiesInRange().Count > 0)
         {

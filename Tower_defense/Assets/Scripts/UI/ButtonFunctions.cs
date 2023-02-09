@@ -37,4 +37,9 @@ public class ButtonFunctions : MonoBehaviour
     {
         selectedTower = towerSelectedEvent.towerID;
     }
+
+    public void StartWave()
+    {
+        EventBus<StartPressedEvent>.Publish(new StartPressedEvent());
+    }
 }

@@ -6,7 +6,7 @@ using System;
 public class GameStateManager : MonoBehaviour
 {
     public static GameStateManager Instance { get; set; }
-    public enum GameState {Fight, Build}
+    public enum GameState {Fight, Build, Win, Lose}
 
     public GameState gameState = GameState.Build;
 
@@ -20,19 +20,20 @@ public class GameStateManager : MonoBehaviour
     private void OnEnable()
     {
         EventBus<AllEnemiesGoneEvent>.Subscribe(StartBuild);
+        EventBus<StartPressedEvent>.Subscribe(StartFight);
+        EventBus<WinGameEvent>.Subscribe(OnGameWin);
+        EventBus<LoseGameEvent>.Subscribe(OnGameLose);
     }
 
     private void OnDestroy()
     {
         EventBus<AllEnemiesGoneEvent>.UnSubscribe(StartBuild);
+        EventBus<StartPressedEvent>.UnSubscribe(StartFight);
+        EventBus<WinGameEvent>.UnSubscribe(OnGameWin);
+        EventBus<LoseGameEvent>.UnSubscribe(OnGameLose);
     }
 
-    void Update()
-    {
-        StartFight();
-    }
-
-    public void SetState(GameState newState)
+    private void SetState(GameState newState)
     {
         gameState = newState;
         switch (gameState) {
@@ -44,21 +45,37 @@ public class GameStateManager : MonoBehaviour
             case GameState.Fight:
                 EventBus<BuildingFaseEndedEvent>.Publish(new BuildingFaseEndedEvent());
                 break;
+            case GameState.Win:
+                Time.timeScale = 0;
+                break;
+            case GameState.Lose:
+                Time.timeScale = 0;
+                break;
 
         }
 
     }
 
-    void StartFight()
+   private void StartFight(StartPressedEvent startPressedEvent)
     {
-        if (gameState == GameState.Build && Input.GetKeyDown(KeyCode.Space))
+        if (gameState == GameState.Build)
         {
             SetState(GameState.Fight);
         }
     }
 
-    void StartBuild(AllEnemiesGoneEvent allEnemiesGoneEvent)
+    private void StartBuild(AllEnemiesGoneEvent allEnemiesGoneEvent)
     {
         SetState(GameState.Build);
+    }
+
+    private void OnGameWin(WinGameEvent winGameEvent)
+    {
+        SetState(GameState.Win);
+    }
+
+    private void OnGameLose(LoseGameEvent loseGameEvent)
+    {
+    SetState(GameState.Lose);
     }
 }

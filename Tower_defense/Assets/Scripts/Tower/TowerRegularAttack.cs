@@ -8,14 +8,15 @@ public class TowerRegularAttack : MonoBehaviour, ITowerAttack
     private float attackRange = 5;
     private float attackCooldown = 1;
     private float attackDamage = 50;
-    private float attackTimer = 0;
     ITowerTargeting targetSystem;
     private TowerID ID;
+    private CountDownTimer attackCountdownTimer = new CountDownTimer(0, true);
 
     private void OnEnable()
     {
         ID = GetComponent<TowerID>();
         EventBus<TowerStatsChangedEvent>.Subscribe(OnTowerStatsChange);
+        ChangeStats(ID);
     }
 
     private void OnDestroy()
@@ -35,33 +36,18 @@ public class TowerRegularAttack : MonoBehaviour, ITowerAttack
 
     void Update()
     {
-        Countdown();
+        if (attackCountdownTimer.CountDown()) Shoot();
         target = targetSystem.Target();
-    }
-
-    private void Countdown()
-    {
-        if (attackTimer > 0)
-        {
-            attackTimer -= Time.deltaTime;
-        }
-        else
-        {
-            if (target != null) Shoot();
-        }
     }
 
     void Shoot()
     {
         EventBus<TowerAttackEvent>.Publish(new TowerAttackEvent(target, attackDamage));
-        attackTimer = attackCooldown;
     }
 
     private void OnTowerStatsChange(TowerStatsChangedEvent towerStatsChangedEvent)
     {
-        attackRange = ID.attackRange;
-        attackDamage = ID.attackDamage;
-        attackCooldown = ID.attackCooldown;
+        ChangeStats(towerStatsChangedEvent.towerID);
     }
 
     private void OnDrawGizmos()
@@ -72,5 +58,13 @@ public class TowerRegularAttack : MonoBehaviour, ITowerAttack
                 Gizmos.color = Color.cyan;
                 Gizmos.DrawLine(transform.position, targetSystem.EnemiesInRange()[target].position);
         }
+    }
+
+    private void ChangeStats(TowerID iD)
+    {
+        attackRange = ID.attackRange;
+        attackDamage = ID.attackDamage;
+        attackCooldown = ID.attackCooldown;
+        attackCountdownTimer.SetCountdownTime(attackCooldown);
     }
 }

@@ -8,14 +8,15 @@ public class TowerDebuff : MonoBehaviour, ITowerAttack
     private float attackRange = 5;
     private float attackRate = 1;
     private float debuffTime = 3;
-    private float attackTimer = 0;
     ITowerTargeting targetSystem;
     private TowerID ID;
+    private CountDownTimer attackCountdownTimer = new CountDownTimer(0, true);
 
     private void OnEnable()
     {
         ID = GetComponent<TowerID>();
         EventBus<TowerStatsChangedEvent>.Subscribe(OnTowerStatsChange);
+        ChangeStats(ID);
     }
 
     private void OnDestroy()
@@ -34,36 +35,29 @@ public class TowerDebuff : MonoBehaviour, ITowerAttack
 
     void Update()
     {
-        Countdown();
         target = targetSystem.Target();
-    }
-
-    private void Countdown()
-    {
-        if (attackTimer > 0)
-        {
-            attackTimer -= Time.deltaTime;
-        }
-        else
-        {
-            if (target != null) Shoot();
-        }
     }
 
     void Shoot()
     {
+        if (attackCountdownTimer.CountDown()) Shoot();
         EventBus<TowerDebuffEvent>.Publish(new TowerDebuffEvent(target, debuffTime));
-        attackTimer = attackRate;
     }
 
     private void OnTowerStatsChange(TowerStatsChangedEvent towerStatsChangedEvent)
     {
+        ChangeStats(towerStatsChangedEvent.towerID);
+    }
+
+    private void ChangeStats(TowerID iD)
+    {
         attackRange = ID.attackRange;
         attackRate = ID.attackCooldown;
         attackRate = ID.debuffTime;
+        attackCountdownTimer.SetCountdownTime(attackRate);
     }
 
-    private void OnDrawGizmos()
+        private void OnDrawGizmos()
     {
         if (this.enabled && targetSystem.EnemiesInRange().ContainsKey(target))
         {
