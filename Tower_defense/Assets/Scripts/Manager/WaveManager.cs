@@ -7,10 +7,8 @@ public class WaveManager : MonoBehaviour
     [SerializeField]private List<GameObject> enemyTypes;
     [SerializeField]private Transform enemySpawn;
 
-    private int currentWave = 0;
-    //[SerializeField]private Vector2[] waveComposition;
-    //[SerializeField] private float[] spawnRatePerWave;
-    //private int[] oldWave;
+    private int waveNumber = 0;
+    private int[] wave;
     private uint spawnNumber = 0;
 
     private Dictionary<uint, Transform> spawnedWave = new Dictionary<uint, Transform>();
@@ -48,14 +46,14 @@ public class WaveManager : MonoBehaviour
     {
         if (!inWave)
         {
-            spawnCountdownTimer.SetCountdownTime(waves[currentWave].spawnRate);
+            spawnCountdownTimer.SetCountdownTime(waves[waveNumber].spawnRate);
             spawnCountdownTimer.Unpause();
             inWave = true;
             canSpawn = true;
             spawnedWave.Clear();
-            //oldWave = waves[currentWave].GetWave();
+            wave = waves[waveNumber].GetWave();
 
-            EventBus<WaveStartEvent>.Publish(new WaveStartEvent(currentWave, waves[currentWave].WaveSize()));
+            EventBus<WaveStartEvent>.Publish(new WaveStartEvent(waveNumber, waves[waveNumber].WaveSize()));
         }
     }
 
@@ -64,7 +62,7 @@ public class WaveManager : MonoBehaviour
         inWave = false;
         canSpawn = false;
         spawnNumber = 0;
-        if (currentWave + 1 < waves.Length) currentWave++;
+        if (waveNumber + 1 < waves.Length) waveNumber++;
         else EventBus<WinGameEvent>.Publish(new WinGameEvent());
     }
 
@@ -84,7 +82,7 @@ public class WaveManager : MonoBehaviour
 
     private void SpawnEnemy(uint pSpawnNumber)
     {
-        spawnedWave.Add(pSpawnNumber, Instantiate(enemyTypes[waves[currentWave].GetWave()[pSpawnNumber]], enemySpawn, false).transform);
+        spawnedWave.Add(pSpawnNumber, Instantiate(enemyTypes[wave[pSpawnNumber]], enemySpawn, false).transform);
         spawnedWave[pSpawnNumber].GetComponent<EnemyID>().SetID(pSpawnNumber);
 
         EventBus<WaveChangedEvent>.Publish(new WaveChangedEvent(spawnedWave));
@@ -92,7 +90,7 @@ public class WaveManager : MonoBehaviour
 
     private void CheckWaveEnded()
     {
-        if (spawnNumber >= waves[currentWave].WaveSize() && spawnedWave.Count == 0)
+        if (spawnNumber >= waves[waveNumber].WaveSize() && spawnedWave.Count == 0)
         {
             EventBus<AllEnemiesGoneEvent>.Publish(new AllEnemiesGoneEvent());
             EndWave();
@@ -101,41 +99,9 @@ public class WaveManager : MonoBehaviour
 
     private bool EnemiesLeftToSpawn()
     {
-        if (spawnNumber >= waves[currentWave].WaveSize()) return false;
+        if (spawnNumber >= waves[waveNumber].WaveSize()) return false;
         return true;
     }
-
-    /*private int[] ShuffledWave()
-    {
-        int[] betterWave = new int[WaveSize(currentWave)];
-        int enemeyNumber = 0;
-
-        while (enemeyNumber < (int)waveComposition[currentWave][0])
-        {
-            betterWave[enemeyNumber] = 0;
-            enemeyNumber++;
-        }
-        while (enemeyNumber < WaveSize(currentWave))
-        {
-            betterWave[enemeyNumber] = 1;
-            enemeyNumber++;
-        }
-        Shuffle(betterWave);
-        return betterWave;
-    }
-
-    private void Shuffle(int[] array)
-    {
-        int n = array.Length - 1;
-        while (n > 1)
-        {
-            int k = Random.Range(0, array.Length);
-            int temp = array[n];
-            array[n] = array[k];
-            array[k] = temp;
-            n--;
-        }
-    }*/
 
     private void OnEnemyKilled(EnemyKilledEvent enemyKilledEvent)
     {     

@@ -3,7 +3,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "WaveScriptableObject", menuName = "ScriptableObjects/Wave")]
 public class Wave : ScriptableObject
 {
-    public int spawnRate = 1;
+    public float spawnRate = 1;
     public Vector2Int[] waveComposition;
     public bool shuffleEnemies;
 
@@ -27,6 +27,7 @@ public class Wave : ScriptableObject
         }
         return waveInOrder;
     }
+
     public int WaveSize()
     {
         int size = 0;
@@ -36,21 +37,17 @@ public class Wave : ScriptableObject
         }
         return size;
     }
+
     private int[] ShuffledWave()
     {
         int[] wave = WaveInOrder();
-        Shuffle(wave);
-        return wave;
-    }
-
-    private void Shuffle(int[] array)
-    {
-        for (int i = 0; i < array.Length; i++)
+        for (int i = 0; i < wave.Length; i++)
         {
-            int random = Random.Range(0, array.Length);
-            int temp = array[i];
-            array[i] = array[random];
-            array[random] = temp;
+            int random = Random.Range(0, wave.Length);
+            int temp = wave[i];
+            wave[i] = wave[random];
+            wave[random] = temp;
         }
+        return wave;
     }
 }
