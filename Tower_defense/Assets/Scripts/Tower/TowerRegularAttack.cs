@@ -62,7 +62,7 @@ public class TowerRegularAttack : MonoBehaviour, ITowerAttack
 
     private void ChangeStats(TowerID iD)
     {
-        attackRange = ID.attackRange;
+        attackRange = ID.towerStats;
         attackDamage = ID.attackDamage;
         attackCooldown = ID.attackCooldown;
         attackCountdownTimer.SetCountdownTime(attackCooldown);

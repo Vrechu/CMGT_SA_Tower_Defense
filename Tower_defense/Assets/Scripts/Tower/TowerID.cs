@@ -6,7 +6,7 @@ public class TowerID : MonoBehaviour
 {
     public uint ID;
     public float upgradeCost = 75;
-    public float attackRange = 5;
+    /*public float attackRange = 5;
     public float attackCooldown = 1;
     public float attackDamage = 50;
     public float debuffTime = 4;
@@ -14,7 +14,9 @@ public class TowerID : MonoBehaviour
     [SerializeField] private float upgradeDamageIncrease = 2;
     [SerializeField] private float upgradeRangeIncrease = 2;
     [SerializeField] private float upgradeCooldownMultiplier = 0.8f;
-    [SerializeField] private float upgradeDebuffTimeIncrease = 2;
+    [SerializeField] private float upgradeDebuffTimeIncrease = 2;*/
+
+    public TowerStats towerStats;
 
     public void SetID(uint cID)
     {
