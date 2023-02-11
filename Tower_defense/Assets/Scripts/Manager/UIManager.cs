@@ -21,7 +21,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject winScreen;
     [SerializeField] private GameObject loseScreen;
 
-    private CountDownTimer moneyGainedUITimer = new CountDownTimer(0.5f, false);
+    private CountdownTimer moneyGainedUITimer = new CountdownTimer(0.5f, false);
 
     private void OnEnable()
     {

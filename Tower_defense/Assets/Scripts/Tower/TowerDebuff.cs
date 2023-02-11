@@ -10,7 +10,7 @@ public class TowerDebuff : MonoBehaviour, ITowerAttack
     private float debuffTime = 3;
     ITowerTargeting targetSystem;
     private TowerID ID;
-    private CountDownTimer attackCountdownTimer = new CountDownTimer(0, true);
+    private CountdownTimer attackCountdownTimer = new CountdownTimer(0, true);
 
     private void OnEnable()
     {

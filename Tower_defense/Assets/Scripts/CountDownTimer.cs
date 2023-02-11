@@ -2,14 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CountDownTimer : MonoBehaviour
+public class CountdownTimer : MonoBehaviour
 {
     private float countDownTime;
     private float time;
     private bool resetOnZero = true;
     private bool paused = false;
 
-    public CountDownTimer(float cCountDownTime, bool cResetOnZero = true) 
+    public CountdownTimer(float cCountDownTime, bool cResetOnZero = true) 
     {
         countDownTime = cCountDownTime;
         resetOnZero = cResetOnZero;

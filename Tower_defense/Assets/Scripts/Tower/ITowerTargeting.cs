@@ -6,6 +6,6 @@ public interface ITowerTargeting
 {
     uint Target();
     void SetAttackRange(float attackRange);
-    void SetTransform(Transform cTransform);
+    void SetTransform(Transform pTransform);
     Dictionary<uint, Transform> EnemiesInRange();
 }

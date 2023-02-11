@@ -9,7 +9,7 @@ public class TowerAOE : MonoBehaviour, ITowerAttack
     private float attackDamage = 50;
     ITowerTargeting targetSystem;
     private TowerID ID;
-    private CountDownTimer attackCountdownTimer = new CountDownTimer(0, true);
+    private CountdownTimer attackCountdownTimer = new CountdownTimer(0, true);
 
     private void OnEnable()
     {

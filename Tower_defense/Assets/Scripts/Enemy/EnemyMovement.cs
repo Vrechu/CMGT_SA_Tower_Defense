@@ -14,7 +14,7 @@ public class EnemyMovement : MonoBehaviour
         ID = GetComponent<EnemyID>();
     }
 
-    void Start()
+    private void Start()
     {
         agent = GetComponent<NavMeshAgent>();
         basePosition = GameObject.FindGameObjectWithTag("Finish").transform;

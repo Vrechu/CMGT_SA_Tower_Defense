@@ -8,23 +8,24 @@ public class WaveManager : MonoBehaviour
     [SerializeField]private Transform enemySpawn;
 
     private int currentWave = 0;
-    [SerializeField]private Vector2[] waveComposition;
-    [SerializeField] private float[] spawnRatePerWave;
-    private float spawnTimer = 1;
+    //[SerializeField]private Vector2[] waveComposition;
+    //[SerializeField] private float[] spawnRatePerWave;
+    //private int[] oldWave;
     private uint spawnNumber = 0;
 
-    private Dictionary<uint, Transform> wave = new Dictionary<uint, Transform>();
+    private Dictionary<uint, Transform> spawnedWave = new Dictionary<uint, Transform>();
 
     private bool canSpawn = false;
     private bool inWave = false;
-    private CountDownTimer spawnCountdownTimer = new CountDownTimer(1, true);
+    private CountdownTimer spawnCountdownTimer = new CountdownTimer(1, true);
+    [SerializeField]private Wave[] waves;
 
     private void OnEnable()
     {
         EventBus<BuildingFaseEndedEvent>.Subscribe(StartWave);
         EventBus<EnemyKilledEvent>.Subscribe(OnEnemyKilled);
         EventBus<EnemyReachedEndEvent>.Subscribe(OnEnemyFinisheded);
-        EventBus<TowerPlacedEvent>.Subscribe(UpdateWave);
+        EventBus<TowerPlacedEvent>.Subscribe(OnTowerPlaced);
     }
 
     private void OnDestroy()
@@ -32,18 +33,14 @@ public class WaveManager : MonoBehaviour
         EventBus<BuildingFaseEndedEvent>.UnSubscribe(StartWave);
         EventBus<EnemyKilledEvent>.UnSubscribe(OnEnemyKilled);
         EventBus<EnemyReachedEndEvent>.UnSubscribe(OnEnemyFinisheded);
-        EventBus<TowerPlacedEvent>.UnSubscribe(UpdateWave);
-    }
-    private void Start()
-    {
-        spawnCountdownTimer.Pause();
+        EventBus<TowerPlacedEvent>.UnSubscribe(OnTowerPlaced);
     }
 
     private void Update()
     {
         if (canSpawn && spawnCountdownTimer.CountDown())
         {
-            SpawnRandomEnemy();
+            CheckIfSpawnsLeft();
         }
     }
 
@@ -51,40 +48,32 @@ public class WaveManager : MonoBehaviour
     {
         if (!inWave)
         {
-            spawnCountdownTimer.SetCountdownTime(spawnRatePerWave[currentWave]);
+            spawnCountdownTimer.SetCountdownTime(waves[currentWave].spawnRate);
             spawnCountdownTimer.Unpause();
             inWave = true;
             canSpawn = true;
-            wave.Clear();
-            EventBus<WaveStartEvent>.Publish(new WaveStartEvent(currentWave, WaveSize()));
+            spawnedWave.Clear();
+            //oldWave = waves[currentWave].GetWave();
+
+            EventBus<WaveStartEvent>.Publish(new WaveStartEvent(currentWave, waves[currentWave].WaveSize()));
         }
     }
 
-   private int WaveSize()
-    {
-        return (int)(waveComposition[currentWave][0] + waveComposition[currentWave][1]);
-    }
-
-   private void EndWave()
+    private void EndWave()
     {
         inWave = false;
         canSpawn = false;
         spawnNumber = 0;
-        if (currentWave + 1 < waveComposition.Length) currentWave++;
+        if (currentWave + 1 < waves.Length) currentWave++;
         else EventBus<WinGameEvent>.Publish(new WinGameEvent());
     }
 
-    private void SpawnRandomEnemy()
+    private void CheckIfSpawnsLeft()
     {
-        if (WaveSize() > 0)
+        if (EnemiesLeftToSpawn())
         {
-            int randomEnemy = Random.Range(0, 2);
-            randomEnemy = EnemyLeftOfType(randomEnemy);
-            wave.Add(spawnNumber, Instantiate(enemyTypes[randomEnemy], enemySpawn, false).transform);
-            wave[spawnNumber].GetComponent<EnemyID>().SetID(spawnNumber);
+            SpawnEnemy(spawnNumber);
             spawnNumber++;
-            waveComposition[currentWave][randomEnemy]--;
-            EventBus<WaveChangedEvent>.Publish(new WaveChangedEvent(wave));
         }
         else
         {
@@ -93,46 +82,82 @@ public class WaveManager : MonoBehaviour
         }
     }
 
-    private int EnemyLeftOfType(int enemy)
+    private void SpawnEnemy(uint pSpawnNumber)
     {
-        if (waveComposition[currentWave][enemy] > 0)
-        {
-            return enemy;
-        }
-        else if (enemy == 0) return EnemyLeftOfType(1);
-        else return EnemyLeftOfType(0);
-    }
+        spawnedWave.Add(pSpawnNumber, Instantiate(enemyTypes[waves[currentWave].GetWave()[pSpawnNumber]], enemySpawn, false).transform);
+        spawnedWave[pSpawnNumber].GetComponent<EnemyID>().SetID(pSpawnNumber);
 
-    private void OnEnemyKilled(EnemyKilledEvent enemyKilledEvent)
-    {     
-        RemoveEnemy(enemyKilledEvent.enemy);
-        CheckWaveEnded();
-        EventBus<WaveChangedEvent>.Publish(new WaveChangedEvent(wave));
-    }
-
-    private void OnEnemyFinisheded(EnemyReachedEndEvent enemyReachedEndEvent)
-    {
-        RemoveEnemy(enemyReachedEndEvent.enemy);
-        CheckWaveEnded();
-        EventBus<WaveChangedEvent>.Publish(new WaveChangedEvent(wave));
-    }
-
-    private void RemoveEnemy(uint enemy)
-    {
-        wave.Remove(enemy);
+        EventBus<WaveChangedEvent>.Publish(new WaveChangedEvent(spawnedWave));
     }
 
     private void CheckWaveEnded()
     {
-        if (WaveSize() == 0 && wave.Count == 0)
+        if (spawnNumber >= waves[currentWave].WaveSize() && spawnedWave.Count == 0)
         {
             EventBus<AllEnemiesGoneEvent>.Publish(new AllEnemiesGoneEvent());
             EndWave();
         }
     }
 
-    private void UpdateWave(TowerPlacedEvent towerPlacedEvent)
+    private bool EnemiesLeftToSpawn()
     {
-        EventBus<WaveChangedEvent>.Publish(new WaveChangedEvent(wave));
+        if (spawnNumber >= waves[currentWave].WaveSize()) return false;
+        return true;
+    }
+
+    /*private int[] ShuffledWave()
+    {
+        int[] betterWave = new int[WaveSize(currentWave)];
+        int enemeyNumber = 0;
+
+        while (enemeyNumber < (int)waveComposition[currentWave][0])
+        {
+            betterWave[enemeyNumber] = 0;
+            enemeyNumber++;
+        }
+        while (enemeyNumber < WaveSize(currentWave))
+        {
+            betterWave[enemeyNumber] = 1;
+            enemeyNumber++;
+        }
+        Shuffle(betterWave);
+        return betterWave;
+    }
+
+    private void Shuffle(int[] array)
+    {
+        int n = array.Length - 1;
+        while (n > 1)
+        {
+            int k = Random.Range(0, array.Length);
+            int temp = array[n];
+            array[n] = array[k];
+            array[k] = temp;
+            n--;
+        }
+    }*/
+
+    private void OnEnemyKilled(EnemyKilledEvent enemyKilledEvent)
+    {     
+        RemoveEnemy(enemyKilledEvent.enemy);
+        CheckWaveEnded();
+        EventBus<WaveChangedEvent>.Publish(new WaveChangedEvent(spawnedWave));
+    }
+
+    private void OnEnemyFinisheded(EnemyReachedEndEvent enemyReachedEndEvent)
+    {
+        RemoveEnemy(enemyReachedEndEvent.enemy);
+        CheckWaveEnded();
+        EventBus<WaveChangedEvent>.Publish(new WaveChangedEvent(spawnedWave));
+    }
+
+    private void RemoveEnemy(uint enemy)
+    {
+        spawnedWave.Remove(enemy);
+    }
+   
+    private void OnTowerPlaced(TowerPlacedEvent towerPlacedEvent)
+    {
+        EventBus<WaveChangedEvent>.Publish(new WaveChangedEvent(spawnedWave));
     }
 }
