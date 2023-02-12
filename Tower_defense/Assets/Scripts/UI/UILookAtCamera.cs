@@ -4,18 +4,14 @@ using UnityEngine;
 
 public class UILookAtCamera : MonoBehaviour
 {
-    public Camera mainCamera;
-    public Canvas canvas;
+    private Camera mainCamera;
 
     private void OnEnable()
     {
         mainCamera = Camera.main;
-        canvas = GetComponent<Canvas>();
     }
-
-    // Update is called once per frame
     void Update()
     {
-        canvas.transform.LookAt(mainCamera.transform);
+        transform.rotation = mainCamera.transform.rotation;
     }
 }

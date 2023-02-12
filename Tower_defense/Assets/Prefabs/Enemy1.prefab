@@ -407,8 +407,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83e58d3e3e08ac14aa8111bab7829bcb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainCamera: {fileID: 0}
-  canvas: {fileID: 0}
 --- !u!1 &4312886732708058862
 GameObject:
   m_ObjectHideFlags: 0
@@ -640,10 +638,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bf4c9cf251f5754dbc253fecc858632, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ID: 0
-  moneyWorth: 50
-  health: 200
-  speed: 3
+  enemyStats: {fileID: 11400000, guid: 81665305875316d45a0c7f67186d338e, type: 2}
 --- !u!114 &8265610789435586462
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -656,7 +651,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5cd5de2ea60d795468aefdf16308f06f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 3
 --- !u!114 &8265610789435586457
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -669,7 +663,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cccc6c777f3170b4186538b301ff034b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 100
 --- !u!114 &5104879852128237745
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -682,6 +675,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1f61e755b616e64db21714b877b8554, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debuffTimer: 0
 --- !u!114 &8265610789435586456
 MonoBehaviour:
   m_ObjectHideFlags: 0

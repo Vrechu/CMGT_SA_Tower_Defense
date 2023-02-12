@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class EnemyID : MonoBehaviour
 {
-    public uint ID;
-    public float moneyWorth;
+    public uint ID { get; private set; }
+    public EnemyStats enemyStats;
+
+    /*public float moneyWorth;
     public float health;
-    public float speed;
+    public float speed;*/
 
     public void SetID(uint cID)
     {

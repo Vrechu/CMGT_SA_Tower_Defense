@@ -7,17 +7,28 @@ public class EnemyHealthSlider : MonoBehaviour
 {
     private Slider healthSlider;
     private EnemyHealth enemyHealth;
-    void Start()
+    private bool maxvalueSet = false;
+
+    private void OnEnable()
     {
         healthSlider = GetComponent<Slider>();
         enemyHealth = GetComponentInParent<EnemyHealth>();
 
-        healthSlider.maxValue = enemyHealth.health;
+        enemyHealth.OnEnemyHealthChanged += SetHealthSlider;
     }
 
-    // Update is called once per frame
-    void FixedUpdate()
+    private void OnDestroy()
     {
-        healthSlider.value = enemyHealth.health;
+        enemyHealth.OnEnemyHealthChanged -= SetHealthSlider;
+    }
+
+    private void SetHealthSlider(float health)
+    {
+        if (!maxvalueSet)
+        {
+            healthSlider.maxValue = health;
+            maxvalueSet = true;
+        }
+        healthSlider.value = health;
     }
 }
