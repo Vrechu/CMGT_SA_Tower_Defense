@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class WaveManager : MonoBehaviour
 {
-    [SerializeField]private List<GameObject> enemyTypes;
+    [SerializeField]private GameObject[] enemyTypes;
     [SerializeField]private Transform enemySpawn;
 
     private int waveNumber = 0;
@@ -46,7 +46,7 @@ public class WaveManager : MonoBehaviour
     {
         if (!inWave)
         {
-            spawnCountdownTimer.SetCountdownTime(waves[waveNumber].spawnRate);
+            spawnCountdownTimer.SetCountdownTime(waves[waveNumber].SpawnRate);
             spawnCountdownTimer.Unpause();
             inWave = true;
             canSpawn = true;

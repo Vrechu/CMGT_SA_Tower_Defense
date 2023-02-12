@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30bfd317e139d644faf53f2e1ad39721, type: 3}
   m_Name: FastStats
   m_EditorClassIdentifier: 
-  moneyWorth: 35
-  health: 100
-  speed: 6
+  MoneyWorth: 35
+  MaxHealth: 150
+  Speed: 5

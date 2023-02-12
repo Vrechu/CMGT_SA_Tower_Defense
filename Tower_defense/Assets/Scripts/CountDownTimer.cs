@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CountdownTimer : MonoBehaviour
+public class CountdownTimer
 {
     private float countDownTime;
     private float time;
@@ -47,6 +47,5 @@ public class CountdownTimer : MonoBehaviour
     {
         paused = false;
     }
-
 
 }

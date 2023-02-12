@@ -4,6 +4,6 @@ using UnityEngine;
 
 public interface ITowerAttack
 {
-    void Enabled(bool enable);
+   public void Enabled(bool enable);
 
 }

@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30bfd317e139d644faf53f2e1ad39721, type: 3}
   m_Name: RegularStats
   m_EditorClassIdentifier: 
-  moneyWorth: 20
-  health: 100
-  speed: 3
+  MoneyWorth: 20
+  MaxHealth: 100
+  Speed: 3

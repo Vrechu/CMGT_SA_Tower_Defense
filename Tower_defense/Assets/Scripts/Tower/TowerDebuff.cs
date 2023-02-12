@@ -35,12 +35,12 @@ public class TowerDebuff : MonoBehaviour, ITowerAttack
 
     void Update()
     {
+        if (attackCountdownTimer.CountDown() && targetSystem.EnemiesInRange().Count > 0) Shoot();
         target = targetSystem.Target();
     }
 
     void Shoot()
     {
-        if (attackCountdownTimer.CountDown()) Shoot();
         EventBus<TowerDebuffEvent>.Publish(new TowerDebuffEvent(target, debuffTime));
     }
 
@@ -51,17 +51,17 @@ public class TowerDebuff : MonoBehaviour, ITowerAttack
 
     private void SetStartingStats()
     {
-        attackRange = ID.towerStats.startingAttackRange;
-        attackCooldown = ID.towerStats.startingAttackCooldown;
-        debuffTime = ID.towerStats.startingDebuffTime;
+        attackRange = ID.towerStats.StartingAttackRange;
+        attackCooldown = ID.towerStats.StartingAttackCooldown;
+        debuffTime = ID.towerStats.StartingDebuffTime;
         attackCountdownTimer.SetCountdownTime(attackCooldown);
     }
 
     private void AddUpgradeStats(TowerID iD)
     {
-        attackRange += ID.towerStats.upgradeRangeIncrease;
-        debuffTime += ID.towerStats.upgradeDebuffTimeIncrease;
-        attackCooldown *= ID.towerStats.upgradeCooldownMultiplier;
+        attackRange += ID.towerStats.UpgradeRangeIncrease;
+        debuffTime += ID.towerStats.UpgradeDebuffTimeIncrease;
+        attackCooldown *= ID.towerStats.UpgradeCooldownMultiplier;
         attackCountdownTimer.SetCountdownTime(attackCooldown);
     }
 

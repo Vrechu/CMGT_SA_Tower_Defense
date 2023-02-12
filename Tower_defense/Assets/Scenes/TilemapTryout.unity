@@ -25321,11 +25321,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f05a68d8b7f0044aacbfe1c65f90dd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TowerTypes:
+  towerTypes:
   - {fileID: 7795853449283007894, guid: 4b4704a5c281b9347b471979921a11d9, type: 3}
   - {fileID: 7795853449283007894, guid: acb89437de1686142ad13038cd0c50cc, type: 3}
   - {fileID: 7795853449283007894, guid: 919485f36770aa04c81dfdef619a58b2, type: 3}
-  TowerCosts:
+  towerCosts:
   - 100
   - 150
   - 125

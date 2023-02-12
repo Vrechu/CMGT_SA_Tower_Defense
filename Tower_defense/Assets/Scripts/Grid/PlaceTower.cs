@@ -5,11 +5,9 @@ using System;
 
 public class PlaceTower : MonoBehaviour
 {
-    public static event Action<float> OnTowerPlaced;
-
     private Vector3 offset;
     private bool placed = false;
-    private Collider collider;
+    private Collider towerCollider;
     private ITowerAttack towerAttack;
 
     private void OnEnable()
@@ -24,8 +22,8 @@ public class PlaceTower : MonoBehaviour
 
     private void Start()
     {
-        collider = GetComponent<Collider>();
-        collider.enabled = false;
+        towerCollider = GetComponent<Collider>();
+        towerCollider.enabled = false;
         towerAttack = GetComponent<ITowerAttack>();
         towerAttack.Enabled(false);
     }
@@ -39,11 +37,11 @@ public class PlaceTower : MonoBehaviour
         }
     }
 
-    private void Place(TowerPlacedEvent towerSelectionConfirmedEvent)
+    private void Place(TowerPlacedEvent towerPlacedEvent)
     {
         placed = true;
         offset = transform.position - TilemapUtils.GetMouseWorldPosition();
-        collider.enabled = true;
+        towerCollider.enabled = true;
         towerAttack.Enabled(true);
         EventBus<TowerPlacedEvent>.UnSubscribe(Place);
     }

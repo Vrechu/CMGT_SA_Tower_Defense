@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4452796285e3ac74a9a796d1eb081963, type: 3}
   m_Name: wave3
   m_EditorClassIdentifier: 
-  spawnRate: 0.75
-  waveComposition:
-  - {x: 0, y: 20}
-  - {x: 1, y: 10}
-  shuffleEnemies: 1
+  SpawnRate: 1
+  WaveComposition:
+  - {x: 0, y: 15}
+  - {x: 0, y: 10}
+  ShuffleEnemies: 1

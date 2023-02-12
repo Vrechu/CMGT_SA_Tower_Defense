@@ -25,15 +25,8 @@ public class EventBus<T> where T : Event
     }
 }
 
+//Events
 #region ENEMIES
-public class EnemySpawnedEvent: Event
-{
-    public uint ID;
-    public EnemySpawnedEvent(uint cID)
-    {
-        ID = cID;
-    }
-}
 public class EnemyKilledEvent : Event {
     public uint enemy;
     public float money;
@@ -45,7 +38,16 @@ public class EnemyReachedEndEvent : Event
     public EnemyReachedEndEvent(uint cEnemy) { enemy = cEnemy;}
     
 }
-public class AllEnemiesGoneEvent : Event{ }
+
+#endregion
+
+#region WAVE
+public class WaveStartEvent: Event
+{
+    public int waveNumber;
+    public int enemies;
+    public WaveStartEvent(int cWavenumber, int cEnemies) { waveNumber = cWavenumber; enemies = cEnemies; }
+}
 public class WaveChangedEvent : Event
 {
     public Dictionary<uint, Transform> wave;
@@ -54,23 +56,11 @@ public class WaveChangedEvent : Event
         wave = cWave;
     }
 }
-
+public class AllEnemiesGoneEvent : Event{ }
+public class BuildingFaseEndedEvent : Event { }
 #endregion
 
-
-//EVENTS
-
 #region TOWERS
-public class TowerSelectedFromMenuEvent : Event 
-{
-    public float money;
-    public int towerType;
-    public TowerSelectedFromMenuEvent(float cMoney, int cTowerType)
-    {
-        money = cMoney;
-        towerType = cTowerType;
-    }
-}
 public class TowerAttackEvent : Event
 {
     public uint enemyID;
@@ -91,6 +81,25 @@ public class TowerDebuffEvent : Event
         time = cTime;
     }
 }
+public class TowerStatsChangedEvent : Event
+{
+    public TowerID towerID;
+    public TowerStatsChangedEvent(TowerID cTowerID)
+    {
+        towerID = cTowerID;
+    }
+}
+#endregion
+
+#region BUILDING
+public class TowerCostsChangedEvent : Event
+{
+    public float[] costs;
+    public TowerCostsChangedEvent(float[] cCosts)
+    {
+        costs = cCosts;
+    }
+}
 public class TowerPlacedEvent : Event
 {
     public int type;
@@ -101,30 +110,20 @@ public class TowerPlacedEvent : Event
         cost = cCost;
     }
 }
-public class TowerCostsChangedEvent : Event
+public class TowerSelectedFromMenuEvent : Event 
 {
-    public float[] costs;
-    public TowerCostsChangedEvent(float[] cCosts)
+    public float money;
+    public int towerType;
+    public TowerSelectedFromMenuEvent(float cMoney, int cTowerType)
     {
-        costs = cCosts;
+        money = cMoney;
+        towerType = cTowerType;
     }
 }
-public class TowerStatsChangedEvent : Event
-{
-    public TowerID towerID;
-    public TowerStatsChangedEvent(TowerID cTowerID)
-    {
-        towerID = cTowerID;
-    }
-}
-public class TowerAttackEnabledEvent : Event
-{
-    public uint towerID;
-    public TowerAttackEnabledEvent(uint cTowerId)
-    {
-        towerID = cTowerId;
-    }
-}
+
+#endregion
+
+#region UI
 public class TowerSelectedEvent : Event
 {
     public TowerID towerID;
@@ -141,19 +140,9 @@ public class UpgradeButtonPressedEvent : Event
         towerID = cTowerID;
     }
 }
-
-public class EnoughMoneyForUpgradeEvent : Event
-{
-    public TowerID towerID;
-    public EnoughMoneyForUpgradeEvent(TowerID cTowerID)
-    {
-        towerID = cTowerID;
-    }
-}
-
+public class StartPressedEvent : Event { }
+public class DeselectEvent : Event { }
 #endregion
-
-
 
 #region MONEY
 public class MoneyChangedEvent : Event
@@ -169,7 +158,14 @@ public class EnoughMoneyForTowerEvent : Event
         towerType = cTowerType;
     }
 }
-
+public class EnoughMoneyForUpgradeEvent : Event
+{
+    public TowerID towerID;
+    public EnoughMoneyForUpgradeEvent(TowerID cTowerID)
+    {
+        towerID = cTowerID;
+    }
+}
 #endregion
 
 public class LivesChangedEvent : Event
@@ -177,16 +173,6 @@ public class LivesChangedEvent : Event
     public LivesChangedEvent(float cLives) { lives = cLives; }
     public float lives;
 }
-public class WaveStartEvent: Event
-{
-    public int waveNumber;
-    public int enemies;
-    public WaveStartEvent(int cWavenumber, int cEnemies) { waveNumber = cWavenumber; enemies = cEnemies; }
-}
-public class StartPressedEvent : Event { }
-public class BuildingFaseEndedEvent : Event { }
-public class DeselectEvent : Event { }
-
 public class WinGameEvent : Event { }
 public class LoseGameEvent : Event { }
 

@@ -638,7 +638,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bf4c9cf251f5754dbc253fecc858632, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyStats: {fileID: 11400000, guid: 7d76ae3bddda9324c9636337713dc40c, type: 2}
+  EnemyStats: {fileID: 11400000, guid: 7d76ae3bddda9324c9636337713dc40c, type: 2}
 --- !u!114 &8265610789435586462
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -675,7 +675,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1f61e755b616e64db21714b877b8554, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debuffTimer: 0
 --- !u!114 &8265610789435586456
 MonoBehaviour:
   m_ObjectHideFlags: 0

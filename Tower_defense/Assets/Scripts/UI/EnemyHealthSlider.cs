@@ -7,7 +7,7 @@ public class EnemyHealthSlider : MonoBehaviour
 {
     private Slider healthSlider;
     private EnemyHealth enemyHealth;
-    private bool maxvalueSet = false;
+    private bool maxValueSet = false;
 
     private void OnEnable()
     {
@@ -24,10 +24,10 @@ public class EnemyHealthSlider : MonoBehaviour
 
     private void SetHealthSlider(float health)
     {
-        if (!maxvalueSet)
+        if (!maxValueSet)
         {
             healthSlider.maxValue = health;
-            maxvalueSet = true;
+            maxValueSet = true;
         }
         healthSlider.value = health;
     }

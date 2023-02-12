@@ -4,23 +4,22 @@ using UnityEngine;
 
 public class SelectTower : MonoBehaviour
 {
-    private uint selectedTower = 0;
-    private bool selected = false;
-
     private void Update()
     {
+        CheckIfMouseOnTower();        
+    }
 
+    private void CheckIfMouseOnTower()
+    {
         if (Input.GetMouseButtonDown(0))
         {
             if (TilemapUtils.IsMouseOnTower() != null)
             {
-                selected = true;
                 EventBus<TowerSelectedEvent>.Publish(
                     new TowerSelectedEvent(TilemapUtils.IsMouseOnTower()));
             }
             else if (TilemapUtils.IsMouseOnGround())
             {
-                selected = false;
                 EventBus<DeselectEvent>.Publish(new DeselectEvent());
             }
         }

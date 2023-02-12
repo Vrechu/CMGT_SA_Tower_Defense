@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5596a9733e9f34c458e087e8d61d5771, type: 3}
   m_Name: Regular
   m_EditorClassIdentifier: 
-  startingUpgradeCost: 75
-  upgradeCostIncrease: 50
-  startingAttackRange: 5
-  upgradeRangeIncrease: 2
-  startingAttackCooldown: 1
-  upgradeCooldownMultiplier: 0.8
-  startingAttackDamage: 50
-  upgradeDamageIncrease: 2
-  startingDebuffTime: 4
-  upgradeDebuffTimeIncrease: 2
+  StartingUpgradeCost: 75
+  UpgradeCostIncrease: 50
+  StartingAttackRange: 7
+  UpgradeRangeIncrease: 2
+  StartingAttackCooldown: 1
+  UpgradeCooldownMultiplier: 0.8
+  StartingAttackDamage: 30
+  UpgradeDamageIncrease: 10
+  StartingDebuffTime: 0
+  UpgradeDebuffTimeIncrease: 0

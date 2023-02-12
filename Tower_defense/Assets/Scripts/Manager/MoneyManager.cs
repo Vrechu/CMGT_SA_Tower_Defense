@@ -7,7 +7,6 @@ public class MoneyManager : MonoBehaviour
 {
     private float money = 300;
     
-
     private void OnEnable()
     {
         EventBus<EnemyKilledEvent>.Subscribe(AddMoney);
@@ -30,7 +29,7 @@ public class MoneyManager : MonoBehaviour
         EventBus<MoneyChangedEvent>.Publish(new MoneyChangedEvent(money));        
     }
 
-    public void AddMoney(EnemyKilledEvent enemyKilledEvent)
+    private void AddMoney(EnemyKilledEvent enemyKilledEvent)
     {
         money += enemyKilledEvent.money;
         EventBus<MoneyChangedEvent>.Publish(new MoneyChangedEvent(money));

@@ -5,14 +5,10 @@ using UnityEngine;
 public class EnemyID : MonoBehaviour
 {
     public uint ID { get; private set; }
-    public EnemyStats enemyStats;
+    public EnemyStats EnemyStats;
 
-    /*public float moneyWorth;
-    public float health;
-    public float speed;*/
-
-    public void SetID(uint cID)
+    public void SetID(uint PID)
     {
-        ID = cID;
+        ID = PID;
     }
 }

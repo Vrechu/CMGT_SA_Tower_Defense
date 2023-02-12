@@ -6,12 +6,13 @@ public class EnemyDebuff : MonoBehaviour
 {
     private EnemyID ID;
 
-    [SerializeField] private float debuffTimer;
+    private CountdownTimer debuffTimer;
 
     private void OnEnable()
     {
         ID = GetComponent<EnemyID>();
         EventBus<TowerDebuffEvent>.Subscribe(Debuff);
+        debuffTimer = new CountdownTimer(0, false);
     }
 
     private void OnDestroy()
@@ -26,16 +27,16 @@ public class EnemyDebuff : MonoBehaviour
 
     public bool Debuffed()
     {
-        if (debuffTimer > 0)
-        {
-            debuffTimer -= Time.deltaTime;
-            return true;
-        }
-        return false;
+        if (debuffTimer.CountDown()) return false;
+        return true;
     }
 
     public void Debuff(TowerDebuffEvent towerDebuffEvent)
     {
-        if (!Debuffed() && towerDebuffEvent.enemyID == ID.ID) debuffTimer = towerDebuffEvent.time;
+        if (!Debuffed() && towerDebuffEvent.enemyID == ID.ID)
+        {
+            debuffTimer.SetCountdownTime(towerDebuffEvent.time);
+            debuffTimer.Reset();
+        }
     }
 }

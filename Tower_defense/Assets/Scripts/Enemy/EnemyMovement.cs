@@ -18,13 +18,13 @@ public class EnemyMovement : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         basePosition = GameObject.FindGameObjectWithTag("Finish").transform;
-        agent.speed = ID.enemyStats.speed;
+        agent.speed = ID.EnemyStats.Speed;
         agent.SetDestination(basePosition.position);
     }
 
     private void Update()
     {
-        if (GetComponent<EnemyDebuff>().Debuffed()) agent.speed = ID.enemyStats.speed/ 2;
-        else agent.speed = ID.enemyStats.speed;
+        if (GetComponent<EnemyDebuff>().Debuffed()) agent.speed = ID.EnemyStats.Speed/ 2;
+        else agent.speed = ID.EnemyStats.Speed;
     }
 }

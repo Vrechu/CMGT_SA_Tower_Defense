@@ -55,17 +55,17 @@ public class TowerAOE : MonoBehaviour, ITowerAttack
 
     private void SetStartingStats()
     {
-        attackRange = ID.towerStats.startingAttackRange;
-        attackCooldown = ID.towerStats.startingAttackCooldown;
-        attackDamage = ID.towerStats.startingAttackDamage;
+        attackRange = ID.towerStats.StartingAttackRange;
+        attackCooldown = ID.towerStats.StartingAttackCooldown;
+        attackDamage = ID.towerStats.StartingAttackDamage;
         attackCountdownTimer.SetCountdownTime(attackCooldown);
     }
 
     private void AddUpgradeStats(TowerID iD)
     {
-        attackRange += ID.towerStats.upgradeRangeIncrease;
-        attackDamage += ID.towerStats.upgradeDamageIncrease;
-        attackCooldown *= ID.towerStats.upgradeCooldownMultiplier;
+        attackRange += ID.towerStats.UpgradeRangeIncrease;
+        attackDamage += ID.towerStats.UpgradeDamageIncrease;
+        attackCooldown *= ID.towerStats.UpgradeCooldownMultiplier;
         attackCountdownTimer.SetCountdownTime(attackCooldown);
     }
 

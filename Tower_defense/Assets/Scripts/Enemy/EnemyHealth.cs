@@ -12,7 +12,7 @@ public class EnemyHealth : MonoBehaviour
     private void OnEnable()
     {
         ID = GetComponent<EnemyID>();
-        health = ID.enemyStats.health;
+        health = ID.EnemyStats.MaxHealth;
         EventBus<TowerAttackEvent>.Subscribe(TakeDamage);
     }
 
@@ -37,11 +37,11 @@ public class EnemyHealth : MonoBehaviour
         }
     }
 
-    void CheckHealth()
+    private void CheckHealth()
     {
         if(health <= 0)
         {
-            EventBus<EnemyKilledEvent>.Publish(new EnemyKilledEvent(ID.ID,ID.enemyStats.moneyWorth));
+            EventBus<EnemyKilledEvent>.Publish(new EnemyKilledEvent(ID.ID,ID.EnemyStats.MoneyWorth));
             
             Destroy(gameObject);
         }

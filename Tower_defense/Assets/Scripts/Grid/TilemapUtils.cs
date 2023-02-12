@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class TilemapUtils : MonoBehaviour
 {
-    public static TilemapUtils Instance { get; set; }
-    public GridLayout gridLayout;
+    public static TilemapUtils Instance { get; private set; }
+    [SerializeField] private GridLayout gridLayout;
     private Grid grid;
 
     private void Awake()

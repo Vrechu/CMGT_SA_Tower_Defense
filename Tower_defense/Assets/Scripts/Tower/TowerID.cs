@@ -10,15 +10,15 @@ public class TowerID : MonoBehaviour
 
     public TowerStats towerStats;
 
-    public void SetID(uint cID)
+    public void SetID(uint pID)
     {
-        ID = cID;
+        ID = pID;
     }
 
     private void OnEnable()
     {
         EventBus<EnoughMoneyForUpgradeEvent>.Subscribe(Upgrade);
-        currentUpgradeCost = towerStats.startingUpgradeCost;
+        currentUpgradeCost = towerStats.StartingUpgradeCost;
     }
 
     private void OnDestroy()
@@ -30,7 +30,7 @@ public class TowerID : MonoBehaviour
     {
         if (enoughMoneyForUpgradeEvent.towerID.ID == ID)
         {
-            currentUpgradeCost += towerStats.upgradeCostIncrease;
+            currentUpgradeCost += towerStats.UpgradeCostIncrease;
             EventBus<TowerStatsChangedEvent>.Publish(new TowerStatsChangedEvent(this));
         }
     }

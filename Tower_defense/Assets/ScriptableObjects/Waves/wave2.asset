@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4452796285e3ac74a9a796d1eb081963, type: 3}
   m_Name: wave2
   m_EditorClassIdentifier: 
-  spawnRate: 1
-  waveComposition:
+  SpawnRate: 1
+  WaveComposition:
+  - {x: 1, y: 2}
   - {x: 0, y: 10}
   - {x: 1, y: 5}
-  - {x: 0, y: 5}
-  shuffleEnemies: 0
+  ShuffleEnemies: 0

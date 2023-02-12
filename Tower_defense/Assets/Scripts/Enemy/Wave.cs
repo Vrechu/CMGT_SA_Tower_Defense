@@ -3,13 +3,13 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "WaveScriptableObject", menuName = "ScriptableObjects/Wave")]
 public class Wave : ScriptableObject
 {
-    public float spawnRate = 1;
-    public Vector2Int[] waveComposition;
-    public bool shuffleEnemies;
+    public float SpawnRate = 1;
+    public Vector2Int[] WaveComposition;
+    public bool ShuffleEnemies;
 
     public int[] GetWave()
     {
-        if (!shuffleEnemies) return WaveInOrder();
+        if (!ShuffleEnemies) return WaveInOrder();
         return ShuffledWave(); ;
     }
 
@@ -17,11 +17,11 @@ public class Wave : ScriptableObject
     {
         int enemyNumber = 0;
         int[] waveInOrder = new int[WaveSize()];
-        for (int i = 0; i < waveComposition.Length; i++)
+        for (int i = 0; i < WaveComposition.Length; i++)
         {
-            for (int j = 0; j < waveComposition[i][1]; j++)
+            for (int j = 0; j < WaveComposition[i][1]; j++)
             {
-                waveInOrder[enemyNumber] = waveComposition[i][0];
+                waveInOrder[enemyNumber] = WaveComposition[i][0];
                 enemyNumber++;
             }
         }
@@ -31,9 +31,9 @@ public class Wave : ScriptableObject
     public int WaveSize()
     {
         int size = 0;
-        for (int i = 0; i < waveComposition.Length; i++)
+        for (int i = 0; i < WaveComposition.Length; i++)
         {
-            size += waveComposition[i][1];
+            size += WaveComposition[i][1];
         }
         return size;
     }

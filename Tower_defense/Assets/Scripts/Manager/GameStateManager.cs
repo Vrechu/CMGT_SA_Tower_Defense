@@ -5,10 +5,10 @@ using System;
 
 public class GameStateManager : MonoBehaviour
 {
-    public static GameStateManager Instance { get; set; }
-    public enum GameState {Fight, Build, Win, Lose}
+    public static GameStateManager Instance { get; private set; }
+    private enum GameState {Fight, Build, Win, Lose}
 
-    public GameState gameState = GameState.Build;
+    private GameState gameState = GameState.Build;
 
 
     void Start()

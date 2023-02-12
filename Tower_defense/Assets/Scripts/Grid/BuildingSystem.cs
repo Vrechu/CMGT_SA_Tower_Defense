@@ -6,10 +6,10 @@ using System;
 
 public class BuildingSystem : MonoBehaviour
 {
-    [SerializeField] private GameObject[] TowerTypes;
-    [SerializeField] private float[] TowerCosts;
+    [SerializeField] private GameObject[] towerTypes;
+    [SerializeField] private float[] towerCosts;
 
-    private GameObject ObjectToPlace;
+    private GameObject objectToPlace;
     private int objectToPlaceType;
     private Dictionary<uint, Transform> towersPlaced = new Dictionary<uint, Transform>();
     private uint towerNumber = 0;
@@ -27,36 +27,35 @@ public class BuildingSystem : MonoBehaviour
 
     private void Start()
     {
-        EventBus<TowerCostsChangedEvent>.Publish(new TowerCostsChangedEvent(TowerCosts));
+        EventBus<TowerCostsChangedEvent>.Publish(new TowerCostsChangedEvent(towerCosts));
     }
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0) && TilemapUtils.IsMouseOnBuildable() && ObjectToPlace != null)
+        if (Input.GetMouseButtonDown(0) && TilemapUtils.IsMouseOnBuildable() && objectToPlace != null)
         {
-            EventBus<TowerPlacedEvent>.Publish(new TowerPlacedEvent(objectToPlaceType, TowerCosts[objectToPlaceType]));
-            towersPlaced.Add(towerNumber, ObjectToPlace.transform);
+            EventBus<TowerPlacedEvent>.Publish(new TowerPlacedEvent(objectToPlaceType, towerCosts[objectToPlaceType]));
+            towersPlaced.Add(towerNumber, objectToPlace.transform);
             towerNumber++;
-            ObjectToPlace = null;
+            objectToPlace = null;
         }
     }
 
 
-    public void InitializeWithObject(EnoughMoneyForTowerEvent enoughMoneyForTowerEvent)
+    private void InitializeWithObject(EnoughMoneyForTowerEvent enoughMoneyForTowerEvent)
     {
-        GameObject prefab = TowerTypes[enoughMoneyForTowerEvent.towerType];
+        GameObject prefab = towerTypes[enoughMoneyForTowerEvent.towerType];
 
         Vector3 position = TilemapUtils.Instance.SnapCoordinateTogrid(TilemapUtils.GetMouseWorldPosition());
-        PlaceTower placeObjectComponent = prefab.GetComponent<PlaceTower>();
 
-        if (ObjectToPlace != null)
+        if (objectToPlace != null)
         {
-            Destroy(ObjectToPlace.gameObject);
-            ObjectToPlace = null;
+            Destroy(objectToPlace.gameObject);
+            objectToPlace = null;
         }
 
-        ObjectToPlace = Instantiate(prefab, position, Quaternion.identity);
-        ObjectToPlace.GetComponent<TowerID>().SetID(towerNumber);
+        objectToPlace = Instantiate(prefab, position, Quaternion.identity);
+        objectToPlace.GetComponent<TowerID>().SetID(towerNumber);
 
         objectToPlaceType = enoughMoneyForTowerEvent.towerType;
     }
