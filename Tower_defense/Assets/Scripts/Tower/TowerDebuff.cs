@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class TowerDebuff : MonoBehaviour, ITowerAttack
 {
-    public uint target;
+    private uint target;
     private float attackRange = 5;
-    private float attackRate = 1;
+    private float attackCooldown = 1;
     private float debuffTime = 3;
-    ITowerTargeting targetSystem;
+    private ITowerTargeting targetSystem;
     private TowerID ID;
     private CountdownTimer attackCountdownTimer = new CountdownTimer(0, true);
 
@@ -16,7 +16,7 @@ public class TowerDebuff : MonoBehaviour, ITowerAttack
     {
         ID = GetComponent<TowerID>();
         EventBus<TowerStatsChangedEvent>.Subscribe(OnTowerStatsChange);
-        ChangeStats(ID);
+        SetStartingStats();
     }
 
     private void OnDestroy()
@@ -46,18 +46,26 @@ public class TowerDebuff : MonoBehaviour, ITowerAttack
 
     private void OnTowerStatsChange(TowerStatsChangedEvent towerStatsChangedEvent)
     {
-        ChangeStats(towerStatsChangedEvent.towerID);
+        AddUpgradeStats(towerStatsChangedEvent.towerID);
     }
 
-    private void ChangeStats(TowerID iD)
+    private void SetStartingStats()
     {
-        attackRange = ID.attackRange;
-        attackRate = ID.attackCooldown;
-        attackRate = ID.debuffTime;
-        attackCountdownTimer.SetCountdownTime(attackRate);
+        attackRange = ID.towerStats.startingAttackRange;
+        attackCooldown = ID.towerStats.startingAttackCooldown;
+        debuffTime = ID.towerStats.startingDebuffTime;
+        attackCountdownTimer.SetCountdownTime(attackCooldown);
     }
 
-        private void OnDrawGizmos()
+    private void AddUpgradeStats(TowerID iD)
+    {
+        attackRange += ID.towerStats.upgradeRangeIncrease;
+        debuffTime += ID.towerStats.upgradeDebuffTimeIncrease;
+        attackCooldown *= ID.towerStats.upgradeCooldownMultiplier;
+        attackCountdownTimer.SetCountdownTime(attackCooldown);
+    }
+
+    private void OnDrawGizmos()
     {
         if (this.enabled && targetSystem.EnemiesInRange().ContainsKey(target))
         {

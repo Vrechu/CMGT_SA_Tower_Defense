@@ -4,17 +4,9 @@ using UnityEngine;
 
 public class TowerID : MonoBehaviour
 {
-    public uint ID;
-    public float upgradeCost = 75;
-    /*public float attackRange = 5;
-    public float attackCooldown = 1;
-    public float attackDamage = 50;
-    public float debuffTime = 4;
-    [SerializeField] private float upgradeCostIncrease = 50;
-    [SerializeField] private float upgradeDamageIncrease = 2;
-    [SerializeField] private float upgradeRangeIncrease = 2;
-    [SerializeField] private float upgradeCooldownMultiplier = 0.8f;
-    [SerializeField] private float upgradeDebuffTimeIncrease = 2;*/
+    public uint ID { get; private set; }
+    
+    public float currentUpgradeCost { get; private set; }
 
     public TowerStats towerStats;
 
@@ -26,6 +18,7 @@ public class TowerID : MonoBehaviour
     private void OnEnable()
     {
         EventBus<EnoughMoneyForUpgradeEvent>.Subscribe(Upgrade);
+        currentUpgradeCost = towerStats.startingUpgradeCost;
     }
 
     private void OnDestroy()
@@ -37,11 +30,7 @@ public class TowerID : MonoBehaviour
     {
         if (enoughMoneyForUpgradeEvent.towerID.ID == ID)
         {
-            attackRange += upgradeRangeIncrease;
-            attackDamage += upgradeDamageIncrease;
-            attackCooldown *= upgradeCooldownMultiplier;
-            debuffTime += upgradeDebuffTimeIncrease;
-            upgradeCost += upgradeCostIncrease;
+            currentUpgradeCost += towerStats.upgradeCostIncrease;
             EventBus<TowerStatsChangedEvent>.Publish(new TowerStatsChangedEvent(this));
         }
     }

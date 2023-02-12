@@ -198,10 +198,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   upgradeCost: 75
-  attackRange: 5
-  attackRate: 1
-  attackDamage: 50
-  debuffTime: 4
+  towerStats: {fileID: 11400000, guid: 0f82bb0bf7705374da9d0d7e45899867, type: 2}
 --- !u!114 &7795853449283007901
 MonoBehaviour:
   m_ObjectHideFlags: 0

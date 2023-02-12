@@ -93,7 +93,7 @@ public class UIManager : MonoBehaviour
     private void OnTowerSelected(TowerSelectedEvent towerSelectedEvent)
     {
         Upgrade.SetActive(true);
-        SetUpgradeCostUI(towerSelectedEvent.towerID.upgradeCost);
+        SetUpgradeCostUI(towerSelectedEvent.towerID.currentUpgradeCost);
     }
 
 
@@ -124,7 +124,7 @@ public class UIManager : MonoBehaviour
 
     private void OnUpgrade(TowerStatsChangedEvent towerStatsChangedEvent)
     {
-        SetUpgradeCostUI(towerStatsChangedEvent.towerID.upgradeCost);
+        SetUpgradeCostUI(towerStatsChangedEvent.towerID.currentUpgradeCost);
     }
 
     private void OnGameWin(WinGameEvent winGameEvent)

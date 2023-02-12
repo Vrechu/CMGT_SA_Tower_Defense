@@ -5,9 +5,9 @@ using UnityEngine;
 public class TowerAOE : MonoBehaviour, ITowerAttack
 {
     private float attackRange = 5;
-    private float attackRate = 1;
+    private float attackCooldown = 1;
     private float attackDamage = 50;
-    ITowerTargeting targetSystem;
+    private ITowerTargeting targetSystem;
     private TowerID ID;
     private CountdownTimer attackCountdownTimer = new CountdownTimer(0, true);
 
@@ -15,7 +15,7 @@ public class TowerAOE : MonoBehaviour, ITowerAttack
     {
         ID = GetComponent<TowerID>();
         EventBus<TowerStatsChangedEvent>.Subscribe(OnTowerStatsChange);
-        ChangeStats(ID);
+        SetStartingStats();
     }
 
     private void OnDestroy()
@@ -50,15 +50,23 @@ public class TowerAOE : MonoBehaviour, ITowerAttack
     }
     private void OnTowerStatsChange(TowerStatsChangedEvent towerStatsChangedEvent)
     {
-        ChangeStats(towerStatsChangedEvent.towerID);
+        AddUpgradeStats(towerStatsChangedEvent.towerID);
     }
 
-    private void ChangeStats(TowerID iD)
+    private void SetStartingStats()
     {
-        attackRange = ID.attackRange;
-        attackDamage = ID.attackDamage;
-        attackRate = ID.attackCooldown;
-        attackCountdownTimer.SetCountdownTime(attackRate);
+        attackRange = ID.towerStats.startingAttackRange;
+        attackCooldown = ID.towerStats.startingAttackCooldown;
+        attackDamage = ID.towerStats.startingAttackDamage;
+        attackCountdownTimer.SetCountdownTime(attackCooldown);
+    }
+
+    private void AddUpgradeStats(TowerID iD)
+    {
+        attackRange += ID.towerStats.upgradeRangeIncrease;
+        attackDamage += ID.towerStats.upgradeDamageIncrease;
+        attackCooldown *= ID.towerStats.upgradeCooldownMultiplier;
+        attackCountdownTimer.SetCountdownTime(attackCooldown);
     }
 
         private void OnDrawGizmos()

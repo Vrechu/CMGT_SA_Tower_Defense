@@ -30,8 +30,6 @@ public class MoneyManager : MonoBehaviour
         EventBus<MoneyChangedEvent>.Publish(new MoneyChangedEvent(money));        
     }
 
-
-
     public void AddMoney(EnemyKilledEvent enemyKilledEvent)
     {
         money += enemyKilledEvent.money;
@@ -65,9 +63,9 @@ public class MoneyManager : MonoBehaviour
 
     private void OnTowerUpgradePressed(UpgradeButtonPressedEvent upgradeButtonPressedEvent)
     {
-        if (upgradeButtonPressedEvent.towerID.upgradeCost <= money)
+        if (upgradeButtonPressedEvent.towerID.currentUpgradeCost <= money)
         {
-            RemoveMoney(upgradeButtonPressedEvent.towerID.upgradeCost);
+            RemoveMoney(upgradeButtonPressedEvent.towerID.currentUpgradeCost);
             EventBus<EnoughMoneyForUpgradeEvent>.Publish(new EnoughMoneyForUpgradeEvent(upgradeButtonPressedEvent.towerID));
         }
     }

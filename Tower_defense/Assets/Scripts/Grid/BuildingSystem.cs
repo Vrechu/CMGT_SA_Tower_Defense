@@ -56,7 +56,7 @@ public class BuildingSystem : MonoBehaviour
         }
 
         ObjectToPlace = Instantiate(prefab, position, Quaternion.identity);
-        ObjectToPlace.GetComponent<TowerID>().ID = towerNumber;
+        ObjectToPlace.GetComponent<TowerID>().SetID(towerNumber);
 
         objectToPlaceType = enoughMoneyForTowerEvent.towerType;
     }

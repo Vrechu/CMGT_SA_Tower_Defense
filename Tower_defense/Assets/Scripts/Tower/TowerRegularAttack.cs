@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class TowerRegularAttack : MonoBehaviour, ITowerAttack
 {
-    public uint target;
+    private uint target;
     private float attackRange = 5;
     private float attackCooldown = 1;
     private float attackDamage = 50;
-    ITowerTargeting targetSystem;
+    private ITowerTargeting targetSystem;
     private TowerID ID;
     private CountdownTimer attackCountdownTimer = new CountdownTimer(0, true);
 
@@ -16,7 +16,7 @@ public class TowerRegularAttack : MonoBehaviour, ITowerAttack
     {
         ID = GetComponent<TowerID>();
         EventBus<TowerStatsChangedEvent>.Subscribe(OnTowerStatsChange);
-        ChangeStats(ID);
+        SetStartingStats();
     }
 
     private void OnDestroy()
@@ -36,7 +36,7 @@ public class TowerRegularAttack : MonoBehaviour, ITowerAttack
 
     void Update()
     {
-        if (attackCountdownTimer.CountDown()) Shoot();
+        if (attackCountdownTimer.CountDown() && targetSystem.EnemiesInRange().Count > 0 ) Shoot();
         target = targetSystem.Target();
     }
 
@@ -47,7 +47,7 @@ public class TowerRegularAttack : MonoBehaviour, ITowerAttack
 
     private void OnTowerStatsChange(TowerStatsChangedEvent towerStatsChangedEvent)
     {
-        ChangeStats(towerStatsChangedEvent.towerID);
+        AddUpgradeStats(towerStatsChangedEvent.towerID);
     }
 
     private void OnDrawGizmos()
@@ -60,11 +60,19 @@ public class TowerRegularAttack : MonoBehaviour, ITowerAttack
         }
     }
 
-    private void ChangeStats(TowerID iD)
+    private void SetStartingStats()
     {
-        attackRange = ID.towerStats;
-        attackDamage = ID.attackDamage;
-        attackCooldown = ID.attackCooldown;
+        attackRange = ID.towerStats.startingAttackRange;
+        attackCooldown = ID.towerStats.startingAttackCooldown;
+        attackDamage = ID.towerStats.startingAttackDamage;
+        attackCountdownTimer.SetCountdownTime(attackCooldown);
+    }
+
+    private void AddUpgradeStats(TowerID iD)
+    {
+        attackRange += ID.towerStats.upgradeRangeIncrease;
+        attackDamage += ID.towerStats.upgradeDamageIncrease;
+        attackCooldown *= ID.towerStats.upgradeCooldownMultiplier;
         attackCountdownTimer.SetCountdownTime(attackCooldown);
     }
 }
